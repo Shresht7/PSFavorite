@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
 
 namespace PowerShell.Sample
 {
-    public class SamplePredictor : ICommandPredictor
+    public class PSFavoritePredictor : ICommandPredictor
     {
         private readonly Guid _guid;
 
-        internal SamplePredictor(string guid)
+        internal PSFavoritePredictor(string guid)
         {
             _guid = new Guid(guid);
         }
@@ -24,17 +21,17 @@ namespace PowerShell.Sample
         /// <summary>
         /// Gets the name of a subsystem implementation.
         /// </summary>
-        public string Name => "SamplePredictor";
+        public string Name => "PSFavoritePredictor";
 
         /// <summary>
         /// Gets the description of a subsystem implementation.
         /// </summary>
-        public string Description => "A sample predictor";
+        public string Description => "A predictor that uses a list of favorite commands to provide suggestions.";
 
         /// <summary>
         /// The file path of the favorite commands file.
         /// </summary>
-        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "SamplePredictor", "Favorites.txt");
+        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "PSFavoritePredictor", "Favorites.txt");
 
         /// <summary>
         /// A list of favorite commands.
@@ -136,7 +133,7 @@ namespace PowerShell.Sample
         /// </summary>
         public void OnImport()
         {
-            var predictor = new SamplePredictor(Identifier);
+            var predictor = new PSFavoritePredictor(Identifier);
             SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
         }
 

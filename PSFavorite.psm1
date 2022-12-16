@@ -1,4 +1,4 @@
-$DLLPath = "$HOME\Projects\SamplePredictor\bin\Debug\net7.0\SamplePredictor.dll"
+$DLLPath = "$HOME\Projects\PSFavoritePredictor\bin\Debug\net7.0\PSFavoritePredictor.dll"
 
 Import-Module $DLLPath
 

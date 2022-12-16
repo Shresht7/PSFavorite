@@ -1,0 +1,4 @@
+. $PROFILE  # Reload the PowerShell Profile
+z Projects  # Jump to the Projects Directory
+git revert (Invoke-PsFzfGitHashes)    # Choose a commit interactively and revert it
+

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
+using System.Text.RegularExpressions;
 
 namespace PowerShell.Sample
 {
@@ -46,9 +47,32 @@ namespace PowerShell.Sample
                 return default;
             }
 
-            return new SuggestionPackage(new List<PredictiveSuggestion>{
-                new PredictiveSuggestion(string.Concat(input, " HELLO WORLD"))
-            });
+            //  TODO: Move this out of this function so that it isn't called every time
+            // Get the Favorites file
+            string favoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "SamplePredictor", "Favorites.txt");
+
+            // If the file doesn't exist, return an empty package
+            if (!File.Exists(favoritesFile))
+            {
+                return new SuggestionPackage(new List<PredictiveSuggestion>{
+                    new PredictiveSuggestion("No favorites found. Add some to the favorites file.")
+                });
+            }
+
+            // Read the file and get the favorites
+            string[] favorites = File.ReadAllLines(favoritesFile);
+
+            // Return the suggestions
+            List<PredictiveSuggestion> suggestions = new List<PredictiveSuggestion>();
+            foreach (string line in favorites)
+            {
+                //  If the line matches a favorite, add it to the list of suggestions
+                if (Regex.IsMatch(line, input, RegexOptions.IgnoreCase))
+                {
+                    suggestions.Add(new PredictiveSuggestion(line));
+                }
+            }
+            return new SuggestionPackage(suggestions);
         }
 
         #region "interface methods for processing feedback"

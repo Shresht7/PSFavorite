@@ -13,5 +13,5 @@ function Add-Favorite(
     [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
     [string] $Command
 ) {
-    $Command | Out-File -FilePath "$PSScriptRoot\Favorites.txt" -Append
+    $Command | Out-File -FilePath $Script:FavoritesPath -Append
 }

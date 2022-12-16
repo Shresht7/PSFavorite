@@ -8,13 +8,13 @@
 #>
 function Optimize-Favorite {
     begin {
-        $Favorites = Get-Content -Path "$PSScriptRoot\Favorites.txt"
+        $Favorites = Get-Content -Path $Script:FavoritesPath
     }
     process {
         $Favorites = $Favorites | Sort-Object -Unique
     }
 
     end {
-        $Favorites | Out-File -FilePath "$PSScriptRoot\Favorites.txt"
+        $Favorites | Out-File -FilePath $Script:FavoritesPath
     }
 }

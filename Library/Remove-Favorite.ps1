@@ -13,7 +13,7 @@ function Remove-Favorite(
     [string] $Command
 ) {
     begin {
-        $Favorites = Get-Content -Path "$PSScriptRoot\Favorites.txt"
+        $Favorites = Get-Content -Path $Script:FavoritesPath
     }
 
     process {
@@ -21,6 +21,6 @@ function Remove-Favorite(
     }
 
     end {
-        $Favorites | Out-File -FilePath "$PSScriptRoot\Favorites.txt"
+        $Favorites | Out-File -FilePath $Script:FavoritesPath
     }
 }

@@ -1,10 +1,13 @@
+# Path to the Predictor DLL
+$DLLPath = "$HOME\Projects\PSFavorite\bin\Debug\net7.0\PSFavoritePredictor.dll"
+
+# Path to the Favorites file
+$Script:FavoritesPath = "$HOME\Projects\PSFavorite\Favorites.txt"
+
 # Import Library
 Get-ChildItem -Path "$PSScriptRoot\Library" -Filter "*.ps1" | ForEach-Object {
     . $_.FullName
 }
-
-# Path to the Predictor DLL
-$DLLPath = "$HOME\Projects\PSFavorite\bin\Debug\net7.0\PSFavoritePredictor.dll"
 
 # TODO: Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
 # Import the Predictor DLL

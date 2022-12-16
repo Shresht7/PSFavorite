@@ -1,4 +1,6 @@
 . $PROFILE  # Reload the PowerShell Profile
+Get-Command | Get-Random | Get-Help -Full | bat     # Get help about a random command
+Get-Module -ListAvailable | Invoke-Fzf -Multi    # Search for PowerShell Modules
 Get-PSReadLineHistory | Measure-Object -Line     # Get the line count of the PSReadLine history
 git rebase --interactive (Invoke-PsFzfGitBranches)    # Interactively rebase your current branch onto the selected branch.
 git revert (Invoke-PsFzfGitHashes)    # Choose a commit interactively and revert it

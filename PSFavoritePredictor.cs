@@ -1,6 +1,10 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
+using System.IO;
 
 namespace PowerShell.Sample
 {
@@ -21,7 +25,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// Gets the name of a subsystem implementation.
         /// </summary>
-        public string Name => "PSFavoritePredictor";
+        public string Name => "PSFavorite";
 
         /// <summary>
         /// Gets the description of a subsystem implementation.
@@ -31,7 +35,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// The file path of the favorite commands file.
         /// </summary>
-        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "PSFavoritePredictor", "Favorites.txt");
+        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "PSFavorite", "Favorites.txt");
 
         /// <summary>
         /// A list of favorite commands.

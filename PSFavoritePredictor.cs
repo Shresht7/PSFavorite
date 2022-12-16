@@ -25,7 +25,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// Gets the name of a subsystem implementation.
         /// </summary>
-        public string Name => "PSFavorite";
+        public string Name => "Favorite";
 
         /// <summary>
         /// Gets the description of a subsystem implementation.

@@ -1,10 +1,10 @@
 # Path to the Predictor DLL
-$DLLPath = "$HOME\Projects\PSFavorite\Predictor\bin\Debug\net7.0\PSFavoritePredictor.dll"
+$DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
 
 # Path to the Favorites file
-$Script:FavoritesPath = "$HOME\Projects\PSFavorite\Module\Favorites.txt"
+$Script:FavoritesPath = "$PSScriptRoot\Favorites.txt"
 
-# Import Library
+# Import Public Functions
 Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
     . $_.FullName
 }

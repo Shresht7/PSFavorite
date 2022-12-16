@@ -4,7 +4,6 @@ using System.Threading;
 using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
-using System.Text.RegularExpressions;
 
 namespace PowerShell.Sample
 {
@@ -33,6 +32,16 @@ namespace PowerShell.Sample
         public string Description => "A sample predictor";
 
         /// <summary>
+        /// The file path of the favorite commands file.
+        /// </summary>
+        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "SamplePredictor", "Favorites.txt");
+
+        /// <summary>
+        /// A list of favorite commands.
+        /// </summary>
+        private string[] favorites = File.ReadAllLines(_FavoritesFilePath);
+
+        /// <summary>
         /// Get the predictive suggestions. It indicates the start of a suggestion rendering session.
         /// </summary>
         /// <param name="client">Represents the client that initiates the call.</param>
@@ -41,37 +50,27 @@ namespace PowerShell.Sample
         /// <returns>An instance of <see cref="SuggestionPackage"/>.</returns>
         public SuggestionPackage GetSuggestion(PredictionClient client, PredictionContext context, CancellationToken cancellationToken)
         {
+            // Do not provide any suggestions if the input is empty.
             string input = context.InputAst.Extent.Text;
             if (string.IsNullOrWhiteSpace(input))
             {
                 return default;
             }
 
-            //  TODO: Move this out of this function so that it isn't called every time
-            // Get the Favorites file
-            string favoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "SamplePredictor", "Favorites.txt");
-
-            // If the file doesn't exist, return an empty package
-            if (!File.Exists(favoritesFile))
-            {
-                return new SuggestionPackage(new List<PredictiveSuggestion>{
-                    new PredictiveSuggestion("No favorites found. Add some to the favorites file.")
-                });
-            }
-
-            // Read the file and get the favorites
-            string[] favorites = File.ReadAllLines(favoritesFile);
-
-            // Return the suggestions
+            // Instantiate the list of predictive suggestions.
             List<PredictiveSuggestion> suggestions = new List<PredictiveSuggestion>();
+
+            // Iterate through the list of favorite commands and add the ones that match the input.
             foreach (string line in favorites)
             {
-                //  If the line matches a favorite, add it to the list of suggestions
-                if (Regex.IsMatch(line, input, RegexOptions.IgnoreCase))
+                //  If the line contains the input, add it to the suggestions.
+                if (line.Contains(input))
                 {
                     suggestions.Add(new PredictiveSuggestion(line));
                 }
             }
+
+            // Return the list of suggestions.
             return new SuggestionPackage(suggestions);
         }
 

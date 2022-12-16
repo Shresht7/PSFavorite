@@ -8,7 +8,7 @@ $DLLPath = "$HOME\Projects\PSFavoritePredictor\bin\Debug\net7.0\PSFavoritePredic
 
 # TODO: Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
 # Import the Predictor DLL
-Import-Module -Path $DLLPath
+Import-Module -Name $DLLPath
 
 # Register the Add-Favorite KeyHandler
 # Add the current command to the favorites list when Ctrl+Shift+* is pressed.

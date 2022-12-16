@@ -1,73 +1,16 @@
+# Import Library
+Get-ChildItem -Path "$PSScriptRoot\Library" -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
+
+# Path to the Predictor DLL
 $DLLPath = "$HOME\Projects\PSFavoritePredictor\bin\Debug\net7.0\PSFavoritePredictor.dll"
 
-Import-Module $DLLPath
+# TODO: Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
+# Import the Predictor DLL
+Import-Module -Path $DLLPath
 
-<#
-.SYNOPSIS
-    Add the current command to the favorites list
-.DESCRIPTION
-    Add the current command to the favorites list.
-.EXAMPLE
-    Add-Favorite -Command "Get-Date"
-.EXAMPLE
-    "Get-Date" | Add-Favorite
-#>
-function Add-Favorite(
-    # The command to add to the favorites list.
-    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $Command
-) {
-    $Command | Out-File -FilePath "$PSScriptRoot\Favorites.txt" -Append
-}
-
-<#
-.SYNOPSIS
-    Optimize the favorites list.
-.DESCRIPTION
-    Optimize the favorites list. This will sort the list and remove duplicates.
-.EXAMPLE
-    Optimize-Favorite
-#>
-function Optimize-Favorite {
-    begin {
-        $Favorites = Get-Content -Path "$PSScriptRoot\Favorites.txt"
-    }
-    process {
-        $Favorites = $Favorites | Sort-Object -Unique
-    }
-
-    end {
-        $Favorites | Out-File -FilePath "$PSScriptRoot\Favorites.txt"
-    }
-}
-
-<#
-.SYNOPSIS
-    Remove the current command from the favorites list.
-.DESCRIPTION
-    Remove the current command from the favorites list. This will remove all instances of the command.
-.EXAMPLE
-    Remove-Favorite -Command "Get-Date"
-.EXAMPLE
-    "Get-Date" | Remove-Favorite
-#>
-function Remove-Favorite(
-    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $Command
-) {
-    begin {
-        $Favorites = Get-Content -Path "$PSScriptRoot\Favorites.txt"
-    }
-
-    process {
-        $Favorites | Where-Object { $_ -ne $Command }
-    }
-
-    end {
-        $Favorites | Out-File -FilePath "$PSScriptRoot\Favorites.txt"
-    }
-}
-
+# Register the Add-Favorite KeyHandler
 # Add the current command to the favorites list when Ctrl+Shift+* is pressed.
 Set-PSReadLineKeyHandler -Key "Ctrl+Shift+*" `
     -BriefDescription "AddFavorite" `
@@ -75,11 +18,14 @@ Set-PSReadLineKeyHandler -Key "Ctrl+Shift+*" `
     -ScriptBlock {
     param($key, $arg)
 
+    # Get the current command
     $line = ""
     $cursor = ""
     [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor);
 
-    
+    # Add the current command to the favorites list
     $line | Add-Favorite
+
+    # Optimize the favorites list
     Optimize-Favorite
 }

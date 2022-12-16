@@ -1,5 +1,5 @@
 # Path to the Predictor DLL
-$DLLPath = "$HOME\Projects\PSFavorite\bin\Debug\net7.0\PSFavoritePredictor.dll"
+$DLLPath = "$HOME\Projects\PSFavorite\Predictor\bin\Debug\net7.0\PSFavoritePredictor.dll"
 
 # Path to the Favorites file
 $Script:FavoritesPath = "$HOME\Projects\PSFavorite\Module\Favorites.txt"

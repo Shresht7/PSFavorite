@@ -17,7 +17,7 @@ function Remove-PSFavorite(
     }
 
     process {
-        $Favorites | Where-Object { $_ -ne $Command }
+        $Favorites = $Favorites | Where-Object { $_ -ne $Command }
     }
 
     end {

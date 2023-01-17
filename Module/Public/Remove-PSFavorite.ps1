@@ -1,14 +1,14 @@
 <#
 .SYNOPSIS
-    Remove the current command from the favorites list.
+    Remove the current command from the favorites list
 .DESCRIPTION
     Remove the current command from the favorites list. This will remove all instances of the command.
 .EXAMPLE
-    Remove-Favorite -Command "Get-Date"
+    Remove-PSFavorite -Command "Get-Date"
 .EXAMPLE
-    "Get-Date" | Remove-Favorite
+    "Get-Date" | Remove-PSFavorite
 #>
-function Remove-Favorite(
+function Remove-PSFavorite(
     [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
     [string] $Command
 ) {

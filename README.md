@@ -1,4 +1,4 @@
-# PSFavorite
+# `PSFavorite`
 
 This module allows you to mark commands as **favorites**. Your favorite commands will appear as suggestions in the PSReadLine Predictor Views.
 
@@ -67,9 +67,35 @@ Import-Module -Name PSFavorite
 
 ---
 
+## 💽 Development
+
+### 🏗️ Setup
+
+1. Clone the repository
+
+```powershell
+git clone
+# or
+gh repo clone
+```
+
+2. ⚠️ TODO ⚠️
+
+3. Import the module
+
+```powershell
+Import-Module -Name PSFavorite
+```
+
+### 📜 Scripts
+
+- [`Build.ps1`](./Build.ps1) - Builds the PowerShell module
+
 ## 📕 Reference
 
 - https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/create-cmdline-predictor?view=powershell-7.3
+
+---
 
 ## 📃 License
 

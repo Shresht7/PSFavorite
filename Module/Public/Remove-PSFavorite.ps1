@@ -9,6 +9,7 @@
     "Get-Date" | Remove-PSFavorite
 #>
 function Remove-PSFavorite(
+    # The command to remove from the favorites list
     [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
     [string] $Command
 ) {

@@ -23,3 +23,13 @@ dotnet build $Project -c $Configuration -f net7.0
 $DLLSource = "$PSScriptRoot\Predictor\bin\$Configuration\net7.0\PSFavoritePredictor.dll"
 $DLLTarget = "$PSScriptRoot\Module\Library\PSFavoritePredictor.dll"
 Copy-Item -Path $DLLSource -Destination $DLLTarget -Force
+
+# Copy the README to the Module directory
+$ReadmeSource = "$PSScriptRoot\README.md"
+$ReadmeTarget = "$PSScriptRoot\Module\README.md"
+Copy-Item -Path $ReadmeSource -Destination $ReadmeTarget -Force
+
+# Copy the LICENSE to the Module directory
+$LicenseSource = "$PSScriptRoot\LICENSE"
+$LicenseTarget = "$PSScriptRoot\Module\LICENSE"
+Copy-Item -Path $LicenseSource -Destination $LicenseTarget -Force

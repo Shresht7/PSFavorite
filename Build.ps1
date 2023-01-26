@@ -3,6 +3,12 @@
     Build the project
 .DESCRIPTION
     Build the project and copy the DLL to the Module directory.
+.EXAMPLE
+    . ./Build.ps1
+    Run the build script to build the project (in debug configuration) and copy the DLL to the Module directory.
+.EXAMPLE
+    . ./Build.ps1 -Configuration Release
+    Run the build script to build the project (in release configuration) and copy the DLL to the Module directory.
 #>
 
 [CmdletBinding(DefaultParameterSetName = 'Build')]
@@ -19,17 +25,21 @@ $Project = "$PSScriptRoot\Predictor\PSFavoritePredictor.csproj"
 # Build the Predictor DLL
 dotnet build $Project -c $Configuration -f net7.0
 
-# Copy the DLL to the Module directory
-$DLLSource = "$PSScriptRoot\Predictor\bin\$Configuration\net7.0\PSFavoritePredictor.dll"
-$DLLTarget = "$PSScriptRoot\Module\Library\PSFavoritePredictor.dll"
-Copy-Item -Path $DLLSource -Destination $DLLTarget -Force
-
-# Copy the README to the Module directory
-$ReadmeSource = "$PSScriptRoot\README.md"
-$ReadmeTarget = "$PSScriptRoot\Module\README.md"
-Copy-Item -Path $ReadmeSource -Destination $ReadmeTarget -Force
-
-# Copy the LICENSE to the Module directory
-$LicenseSource = "$PSScriptRoot\LICENSE"
-$LicenseTarget = "$PSScriptRoot\Module\LICENSE"
-Copy-Item -Path $LicenseSource -Destination $LicenseTarget -Force
+# Items to copy to the Module directory
+@(
+    @{
+        Source      = "$PSScriptRoot\Predictor\bin\$Configuration\net7.0\PSFavoritePredictor.dll"
+        Destination = "$PSScriptRoot\Module\Library\PSFavoritePredictor.dll"
+    },
+    @{
+        Source      = "$PSScriptRoot\README.md"
+        Destination = "$PSScriptRoot\Module\README.md"
+    },
+    @{
+        Source      = "$PSScriptRoot\LICENSE"
+        Destination = "$PSScriptRoot\Module\LICENSE"
+    }
+) | ForEach-Object {
+    Copy-Item -Path $_.Source -Destination $_.Destination -Force -ErrorAction SilentlyContinue
+    Write-Output "Copied $($_.Source) to $($_.Destination)"
+}

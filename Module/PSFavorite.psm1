@@ -1,17 +1,30 @@
+# * ============= * 
+# * CONFIGURATION * 
+# * ============= * 
+
 # Path to the Predictor DLL
 $DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
 
 # Path to the Favorites file
+# ? Turn this in to a environment variable that can be set in the PowerShell profile by the user
 $Script:FavoritesPath = "$PSScriptRoot\Favorites.txt"
+
+# * ============= * 
+# * IMPORT MODULE * 
+# * ============= * 
 
 # Import Public Functions
 Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
-    . $_.FullName
+    . $_.FullName && Export-ModuleMember -Function $_.BaseName
 }
 
-# TODO: Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
+# ? Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
 # Import the Predictor DLL
 Import-Module $DLLPath
+
+# * ===================== * 
+# * REGISTER KEY BINDINGS * 
+# * ===================== * 
 
 # Register the Add-Favorite KeyHandler
 # Add the current command to the favorites list when Ctrl+Shift+* is pressed.

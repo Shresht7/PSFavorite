@@ -43,6 +43,15 @@ Set-PSReadLineKeyHandler -Key "Ctrl+Shift+*" `
     # Add the current command to the favorites list
     $line | Add-PSFavorite
 
+    # Remove the item from the prompt
+    [Microsoft.PowerShell.PSConsoleReadLine]::DeleteLine()
+
+    # Accept the empty line and move the prompt forward
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()    
+    
+    # Show a notification that the command was added to the favorites list
+    Write-Host "Added '$line' to the favorites list"
+
     # Optimize the favorites list
     Optimize-PSFavorites
 }

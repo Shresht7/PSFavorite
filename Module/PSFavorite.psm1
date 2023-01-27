@@ -15,7 +15,8 @@ $Script:FavoritesPath = "$PSScriptRoot\Favorites.txt"
 
 # Import Public Functions
 Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
-    . $_.FullName && Export-ModuleMember -Function $_.BaseName
+    . $_.FullName
+    Export-ModuleMember -Function $_.BaseName
 }
 
 # ? Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
@@ -40,8 +41,8 @@ Set-PSReadLineKeyHandler -Key "Ctrl+Shift+*" `
     [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor);
 
     # Add the current command to the favorites list
-    $line | Add-Favorite
+    $line | Add-PSFavorite
 
     # Optimize the favorites list
-    Optimize-Favorite
+    Optimize-PSFavorites
 }

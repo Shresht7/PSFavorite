@@ -50,7 +50,8 @@ Set-PSReadLineKeyHandler -Key "Ctrl+Shift+*" `
     [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()    
     
     # Show a notification that the command was added to the favorites list
-    Write-Host "Added '$line' to the favorites list"
+    $Command, $Comment = $line -split "#"
+    Write-Host ($PSStyle.Foreground.Yellow + "⭐ Marked as Favorite:" + $PSStyle.Reset + " $Command " + $PSStyle.Foreground.BrightBlack + "# $Comment" + $PSStyle.Reset)
 
     # Optimize the favorites list
     Optimize-PSFavorites

@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Remove the current command from the favorites list
+    Remove the given command from the favorites list
 .DESCRIPTION
-    Remove the current command from the favorites list. This will remove all instances of the command.
+    Remove the given command from the favorites list. This will remove all instances of the command.
     The favorites list is stored in the Favorites.txt file in the PSFavorite module directory.
     The changes will be reflected the next time the module is imported.
 .EXAMPLE

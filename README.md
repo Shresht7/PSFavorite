@@ -83,4 +83,4 @@ Import-Module -Name PSFavorite
 
 ## 📃 License
 
-[MIT](./LICENSE)
+This project is licensed under the [MIT License](./LICENSE). Please read the [LICENSE](./LICENSE) for more details.

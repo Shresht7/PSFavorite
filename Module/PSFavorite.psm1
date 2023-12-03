@@ -7,7 +7,7 @@ $DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
 
 # Path to the Favorites file
 # ? Turn this in to a environment variable that can be set in the PowerShell profile by the user
-$Script:FavoritesPath = "$Env:LOCALAPPDATA\PSFavorite\Favorites.txt"
+$Script:FavoritesPath = $IsWindows ? "$Env:LOCALAPPDATA\PSFavorite\Favorites.txt" : "~/.local/share/PSFavorite/Favorites.txt"
 
 # * ============= * 
 # * IMPORT MODULE * 

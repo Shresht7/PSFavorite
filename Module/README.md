@@ -2,7 +2,7 @@
 
 This module allows you to mark commands as **favorites**. Your favorite commands will appear as suggestions in the PSReadLine Predictor Views.
 
-Favorites do not replace history, they complement it. The history tracks _everything_ you've done and favorites track the things that you've _deemed important_.
+Favorites do not replace history, they complement it. The history tracks _everything_ you've done, and favorites track the things that you've _deemed important_.
 
 ---
 
@@ -83,4 +83,4 @@ Import-Module -Name PSFavorite
 
 ## 📃 License
 
-[MIT](./LICENSE)
+This project is licensed under the [MIT License](./LICENSE). Please read the [LICENSE](./LICENSE) for more details.

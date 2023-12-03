@@ -31,7 +31,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// The file path of the favorite commands file.
         /// </summary>
-        private static readonly string _FavoritesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Favorites.txt");
+        private static readonly string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "PSFavorite", "Favorites.txt");
 
         /// <summary>
         /// A list of favorite commands.

@@ -15,11 +15,16 @@
     Get-PSFavorites | fzf | Remove-PSFavorite
     Use fuzzy-finder to interactively select a favorite to remove
 #>
-function Remove-PSFavorite(
-    # The command to remove from the favorites list
-    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $Command
-) {
+function Remove-PSFavorite {
+
+    [CmdletBinding(SupportsShouldProcess)]
+    param(
+        # The command to remove from the favorites list
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [string[]] $Command
+    )
+
     begin {
         $Favorites = Get-Content -Path $Script:FavoritesPath
     }

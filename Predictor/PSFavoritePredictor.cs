@@ -31,12 +31,12 @@ namespace PowerShell.Sample
         /// <summary>
         /// The file path of the favorite commands file.
         /// </summary>
-        private static string _FavoritesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Favorites.txt");
+        private static readonly string _FavoritesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Favorites.txt");
 
         /// <summary>
         /// A list of favorite commands.
         /// </summary>
-        private string[] favorites = File.ReadAllLines(_FavoritesFilePath);
+        private readonly string[] favorites = File.ReadAllLines(_FavoritesFilePath);
 
         /// <summary>
         /// Get the predictive suggestions. It indicates the start of a suggestion rendering session.

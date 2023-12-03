@@ -5,13 +5,16 @@
 # Path to the Predictor DLL
 $DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
 
+
+# Create the PSFavorite directory if it doesn't already exist
+$local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "~/.local/share" }
+$folder = Join-Path $local "PSFavorite"
+if (!(Test-Path -Path $folder)) {
+    New-Item -ItemType Directory -Path $folder
+}
+
 # Path to the Favorites file
-$Script:FavoritesPath = if ($IsWindows) {
-    "$Env:LOCALAPPDATA\PSFavorite\Favorites.txt"
-}
-else {
-    "~/.local/share/PSFavorite/Favorites.txt"
-}
+$Script:FavoritesPath = Join-Path $folder "Favorites.txt"
 
 # * ============= * 
 # * IMPORT MODULE * 

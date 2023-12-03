@@ -40,6 +40,7 @@ dotnet build $Project -c $Configuration -f net7.0
         Destination = "$PSScriptRoot\Module\LICENSE"
     }
 ) | ForEach-Object {
-    Copy-Item -Path $_.Source -Destination $_.Destination -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path $_.Destination -Force
+    Copy-Item -Path $_.Source -Destination $_.Destination -Force
     Write-Output "Copied $($_.Source) to $($_.Destination)"
 }

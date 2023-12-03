@@ -22,7 +22,7 @@ function Remove-PSFavorite {
         # The command(s) to remove from the favorites list
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [PSObject[]] $Commands
+        [PSObject[]] $Command
     )
 
     begin {
@@ -31,11 +31,11 @@ function Remove-PSFavorite {
     }
 
     process {
-        foreach ($Command in $Commands) {
+        foreach ($Cmd in $Command) {
             # Extract the command name from the PSObject or use the provided string
-            $CmdName = $Command
-            if ($Command -is [PSObject] -and $Command.PSObject.Properties.Name -contains 'Command') {
-                $CmdName = $Command.Command
+            $CmdName = $Cmd
+            if ($Cmd -is [PSObject] -and $Cmd.PSObject.Properties.Name -contains 'Command') {
+                $CmdName = $Cmd.Command
             }
         
             # Check if the user wants to remove the command

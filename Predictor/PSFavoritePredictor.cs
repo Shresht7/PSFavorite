@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
-using System.IO;
 
 namespace PowerShell.Sample
 {
@@ -35,7 +31,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// The file path of the favorite commands file.
         /// </summary>
-        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PowerShell", "Modules", "PSFavorite", "Favorites.txt");
+        private static string _FavoritesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Favorites.txt");
 
         /// <summary>
         /// A list of favorite commands.

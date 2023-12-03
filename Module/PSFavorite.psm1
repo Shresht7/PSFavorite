@@ -16,6 +16,11 @@ if (!(Test-Path -Path $folder)) {
 # Path to the Favorites file
 $Script:FavoritesPath = Join-Path $folder "Favorites.txt"
 
+# If the file doesn't exist, create an empty file
+if (!(Test-Path -Path $Script:FavoritesPath)) {
+    New-Item -ItemType File -Path $Script:FavoritesPath
+}
+
 # * ============= * 
 # * IMPORT MODULE * 
 # * ============= * 

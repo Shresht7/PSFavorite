@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Remove the given command from the favorites list
+    Remove the given command(s) from the favorites list
 .DESCRIPTION
-    Remove the given command from the favorites list. This will remove all instances of the command.
+    Remove the given command(s) from the favorites list. This will remove all instances of the command(s).
     The favorites list is stored in the Favorites.txt file in the PSFavorite module directory.
     The changes will be reflected the next time the module is imported.
 .EXAMPLE
@@ -19,21 +19,38 @@ function Remove-PSFavorite {
 
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        # The command to remove from the favorites list
+        # The command(s) to remove from the favorites list
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [string[]] $Command
+        [PSObject[]] $Commands
     )
 
     begin {
+        # Read the Favorites.txt content
         $Favorites = Get-Content -Path $Script:FavoritesPath
     }
 
     process {
-        $Favorites = $Favorites | Where-Object { $_ -ne $Command }
+        foreach ($Command in $Commands) {
+            # Extract the command name from the PSObject or use the provided string
+            $CmdName = $Command
+            if ($Command -is [PSObject] -and $Command.PSObject.Properties.Name -contains 'Command') {
+                $CmdName = $Command.Command
+            }
+        
+            # Check if the user wants to remove the command
+            if ($PSCmdlet.ShouldProcess("Remove command '$CmdName' from the favorites list?")) {
+                $Favorites = $Favorites | Where-Object { $_ -ne $CmdName }
+                Write-Verbose "Command '$CmdName' removed from the favorites list."
+            }
+        }
     }
 
     end {
-        $Favorites | Out-File -FilePath $Script:FavoritesPath
+        # Write the filtered Favorites out to the Favorites.txt file
+        if ($PSCmdlet.ShouldProcess("Save changes to the favorites list?")) {
+            $Favorites | Out-File -FilePath $Script:FavoritesPath
+            Write-Verbose "Changes saved to the favorites list."
+        }
     }
 }

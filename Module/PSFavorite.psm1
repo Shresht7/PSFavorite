@@ -6,8 +6,12 @@
 $DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
 
 # Path to the Favorites file
-# ? Turn this in to a environment variable that can be set in the PowerShell profile by the user
-$Script:FavoritesPath = $IsWindows ? "$Env:LOCALAPPDATA\PSFavorite\Favorites.txt" : "~/.local/share/PSFavorite/Favorites.txt"
+$Script:FavoritesPath = if ($IsWindows) {
+    "$Env:LOCALAPPDATA\PSFavorite\Favorites.txt"
+}
+else {
+    "~/.local/share/PSFavorite/Favorites.txt"
+}
 
 # * ============= * 
 # * IMPORT MODULE * 
@@ -19,7 +23,6 @@ Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
     Export-ModuleMember -Function $_.BaseName
 }
 
-# ? Add validation checks for the Predictor. It needs PowerShell 7.2.0 and PSReadLine 2.2.0+.
 # Import the Predictor DLL
 Import-Module $DLLPath
 

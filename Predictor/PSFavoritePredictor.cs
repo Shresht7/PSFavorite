@@ -54,21 +54,46 @@ namespace PowerShell.Sample
                 return default;
             }
 
-            // Instantiate the list of predictive suggestions.
-            List<PredictiveSuggestion> suggestions = new List<PredictiveSuggestion>();
-
-            // Iterate through the list of favorite commands and add the ones that match the input.
-            foreach (string line in favorites)
-            {
-                //  If the line contains the input, add it to the suggestions.
-                if (line.Contains(input))
-                {
-                    suggestions.Add(new PredictiveSuggestion(line));
-                }
-            }
+            // Generate the list of predictive suggestions.
+            List<PredictiveSuggestion> suggestions = favorites
+                .Select(line => new Tuple<string, int>(line, DetermineScore(input, line))) // Determine the score for each line.
+                .Where(tuple => tuple.Item2 > 0) // Filter out the lines with a score of 0.
+                .OrderByDescending(tuple => tuple.Item2) // Order the list by the score in descending order.
+                .Select(tuple => new PredictiveSuggestion(tuple.Item1)) // Create a PredictiveSuggestion object for selected line.
+                .ToList(); // Convert to a list of PredictiveSuggestion objects.
 
             // Return the list of suggestions.
             return new SuggestionPackage(suggestions);
+        }
+
+        /// <summary>
+        /// Determine the score indicating how well the input matches the favorite's line
+        /// </summary>
+        /// <param name="input">The input string</param>
+        /// <param name="line">The line from the favorite's file</param>
+        /// <returns>The score indicating how well the input matches the favorite's line</returns>
+        private int DetermineScore(string input, string line)
+        {
+            int score = 0;
+
+            // If the input is an exact match, give it a score of 100 to make it the top suggestion.
+            if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 100;
+            }
+
+            // If the input contains the words in the line, give it a score of 1 for each word.
+            string[] inputs = input.Split(' ');
+            string[] lines = line.Split(' ');
+            foreach (string word in inputs)
+            {
+                if (lines.Contains(word))
+                {
+                    score++;
+                }
+            }
+
+            return score;
         }
 
         #region "interface methods for processing feedback"

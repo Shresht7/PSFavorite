@@ -69,7 +69,7 @@ namespace PowerShell.Sample
         /// <summary>
         /// The suggestions with a score lower than this threshold will be filtered out.
         /// </summary>
-        private const int ScoreThreshold = 20;
+        private const int ScoreThreshold = 50;
 
         /// <summary>
         /// Determine the score indicating how well the input matches the favorite's line
@@ -81,31 +81,39 @@ namespace PowerShell.Sample
         {
             int score = 0;
 
-            // If the input is an exact match, give it a score of 1000 to make it the top suggestion.
+            // If the input is an exact match, give it a score of 10000 to make it the top suggestion.
+            if (line == input)
+            {
+                score += 10000;
+            }
+
+            // If the input is contained in the line verbatim, give it a score of 1000
             if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
             {
                 score += 1000;
             }
 
-            // If the input contains the words in the line, give it a score of 10 for each word.
+            // If the input words are somewhere in the line, give it a score of 25 for each word.
             string[] inputs = input.Split(' ');
             string[] lines = line.Split(' ');
-            char[] chars = line.ToCharArray();
             foreach (string word in inputs)
             {
                 if (lines.Contains(word))
                 {
-                    score += 10;
-                }
-
-                foreach (char c in input.ToCharArray())
-                {
-                    if (chars.Contains(c))
-                    {
-                        score += 1;
-                    }
+                    score += 25;
                 }
             }
+
+            // If the input characters are somewhere in the line, give it a score of 1 for each character.
+            char[] chars = line.ToCharArray();
+            foreach (char c in input.ToCharArray())
+            {
+                if (chars.Contains(c))
+                {
+                    score += 1;
+                }
+            }
+
 
             return score;
         }

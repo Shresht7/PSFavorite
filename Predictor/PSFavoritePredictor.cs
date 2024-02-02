@@ -57,14 +57,19 @@ namespace PowerShell.Sample
             // Generate the list of predictive suggestions.
             List<PredictiveSuggestion> suggestions = favorites
                 .Select(line => new Tuple<string, int>(line, DetermineScore(input, line))) // Determine the score for each line.
-                .Where(tuple => tuple.Item2 > 0) // Filter out the lines with a score of 0.
+                .Where(tuple => tuple.Item2 >= ScoreThreshold) // Filter out the lines below the score threshold.
                 .OrderByDescending(tuple => tuple.Item2) // Order the list by the score in descending order.
-                .Select(tuple => new PredictiveSuggestion(tuple.Item1)) // Create a PredictiveSuggestion object for selected line.
+                .Select(tuple => new PredictiveSuggestion(tuple.Item1, tuple.Item2.ToString())) // Create a PredictiveSuggestion object for selected line.
                 .ToList(); // Convert to a list of PredictiveSuggestion objects.
 
             // Return the list of suggestions.
             return new SuggestionPackage(suggestions);
         }
+
+        /// <summary>
+        /// The suggestions with a score lower than this threshold will be filtered out.
+        /// </summary>
+        private const int ScoreThreshold = 20;
 
         /// <summary>
         /// Determine the score indicating how well the input matches the favorite's line
@@ -76,20 +81,29 @@ namespace PowerShell.Sample
         {
             int score = 0;
 
-            // If the input is an exact match, give it a score of 100 to make it the top suggestion.
+            // If the input is an exact match, give it a score of 1000 to make it the top suggestion.
             if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
             {
-                score += 100;
+                score += 1000;
             }
 
-            // If the input contains the words in the line, give it a score of 1 for each word.
+            // If the input contains the words in the line, give it a score of 10 for each word.
             string[] inputs = input.Split(' ');
             string[] lines = line.Split(' ');
+            char[] chars = line.ToCharArray();
             foreach (string word in inputs)
             {
                 if (lines.Contains(word))
                 {
-                    score++;
+                    score += 10;
+                }
+
+                foreach (char c in input.ToCharArray())
+                {
+                    if (chars.Contains(c))
+                    {
+                        score += 1;
+                    }
                 }
             }
 

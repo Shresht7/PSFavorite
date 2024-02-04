@@ -2,10 +2,6 @@
 # * CONFIGURATION * 
 # * ============= * 
 
-# Path to the Predictor DLL
-$DLLPath = "$PSScriptRoot\Library\PSFavoritePredictor.dll"
-
-
 # Create the PSFavorite directory if it doesn't already exist
 $local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "~/.local/share" }
 $folder = Join-Path $local "PSFavorite"
@@ -30,9 +26,6 @@ Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
     . $_.FullName
     Export-ModuleMember -Function $_.BaseName
 }
-
-# Import the Predictor DLL
-Import-Module $DLLPath
 
 # * ===================== * 
 # * REGISTER KEY BINDINGS * 

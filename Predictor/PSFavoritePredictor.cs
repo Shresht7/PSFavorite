@@ -56,10 +56,10 @@ namespace PowerShell.Sample
 
             // Generate the list of predictive suggestions.
             List<PredictiveSuggestion> suggestions = favorites
-                .Select(line => new Tuple<string, int>(line, DetermineScore(input, line))) // Determine the score for each line.
-                .Where(tuple => tuple.Item2 >= ScoreThreshold) // Filter out the lines below the score threshold.
-                .OrderByDescending(tuple => tuple.Item2) // Order the list by the score in descending order.
-                .Select(tuple => new PredictiveSuggestion(tuple.Item1, tuple.Item2.ToString())) // Create a PredictiveSuggestion object for selected line.
+                .Select(line => (Line: line, Score: DetermineScore(input, line))) // Determine the score for each line.
+                .Where(tuple => tuple.Score >= ScoreThreshold) // Filter out the lines below the score threshold.
+                .OrderByDescending(tuple => tuple.Score) // Order the list by the score in descending order.
+                .Select(tuple => new PredictiveSuggestion(tuple.Line, tuple.Score.ToString())) // Create a PredictiveSuggestion object for selected line.
                 .ToList(); // Convert to a list of PredictiveSuggestion objects.
 
             // Return the list of suggestions.

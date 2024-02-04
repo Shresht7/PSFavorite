@@ -24,13 +24,13 @@
     Author        = 'Shresht7'
 
     # Company or vendor of this module
-    CompanyName   = 'Shresht7'
+    # CompanyName   = 'Shresht7'
 
     # Copyright statement for this module
     Copyright     = '(c) Shresht7. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description   = 'This module allows you to mark commands as favorites'
+    Description   = 'This module allows you to mark commands as favorites that later show up as PSReadline predictions'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -66,7 +66,7 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    # NestedModules = @()
+    NestedModules = @("Library/PSFavoritePredictor.dll")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     # FunctionsToExport = @()

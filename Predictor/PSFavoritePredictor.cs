@@ -54,21 +54,56 @@ namespace PowerShell.Sample
                 return default;
             }
 
-            // Instantiate the list of predictive suggestions.
-            List<PredictiveSuggestion> suggestions = new List<PredictiveSuggestion>();
-
-            // Iterate through the list of favorite commands and add the ones that match the input.
-            foreach (string line in favorites)
-            {
-                //  If the line contains the input, add it to the suggestions.
-                if (line.Contains(input))
-                {
-                    suggestions.Add(new PredictiveSuggestion(line));
-                }
-            }
+            // Generate the list of predictive suggestions.
+            List<PredictiveSuggestion> suggestions = favorites
+                .Select(line => new Tuple<string, int>(line, DetermineScore(input, line))) // Determine the score for each line.
+                .Where(tuple => tuple.Item2 >= ScoreThreshold) // Filter out the lines below the score threshold.
+                .OrderByDescending(tuple => tuple.Item2) // Order the list by the score in descending order.
+                .Select(tuple => new PredictiveSuggestion(tuple.Item1, tuple.Item2.ToString())) // Create a PredictiveSuggestion object for selected line.
+                .ToList(); // Convert to a list of PredictiveSuggestion objects.
 
             // Return the list of suggestions.
             return new SuggestionPackage(suggestions);
+        }
+
+        /// <summary>
+        /// The suggestions with a score lower than this threshold will be filtered out.
+        /// </summary>
+        private const int ScoreThreshold = 50;
+
+        /// <summary>
+        /// Determine the score indicating how well the input matches the favorite's line
+        /// </summary>
+        /// <param name="input">The input string</param>
+        /// <param name="line">The line from the favorite's file</param>
+        /// <returns>The score indicating how well the input matches the favorite's line</returns>
+        private int DetermineScore(string input, string line)
+        {
+            int score = 0;
+
+            // If the input matches the start of the line exactly, add 10000 score to make it the top suggestion.
+            if (line.StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 10000;
+            }
+
+            // If the input appears in the line, in the exact same order, add 1000 score.
+            if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 1000;
+            }
+
+            // If the input words appear in the line somewhere, add 25 points.
+            string[] inputWords = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (string word in inputWords)
+            {
+                if (line.Contains(word, StringComparison.OrdinalIgnoreCase))
+                {
+                    score += 25;
+                }
+            }
+
+            return score;
         }
 
         #region "interface methods for processing feedback"

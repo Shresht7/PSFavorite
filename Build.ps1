@@ -16,19 +16,24 @@ param(
     # The configuration of the build (`Debug` or `Release`) [Default: `Debug`]
     [Parameter(ParameterSetName = 'Build')]
     [ValidateSet('Debug', 'Release')]
-    [string] $Configuration = 'Debug'
+    [string] $Configuration = 'Debug',
+
+    # The target framework of the build (`net7.0` or `net8.0`) [Default: `net8.0`]
+    [ValidateSet("net7.0", "net8.0")]
+    [ValidateNotNullOrEmpty()]
+    [string] $TargetFramework = "net8.0"
 )
 
 # Path to the Predictor project
 $Project = "$PSScriptRoot\Predictor\PSFavoritePredictor.csproj"
 
 # Build the Predictor DLL
-dotnet build $Project -c $Configuration -f net7.0
+dotnet build $Project -c $Configuration -f $TargetFramework
 
 # Items to copy to the Module directory
 @(
     @{
-        Source      = "$PSScriptRoot\Predictor\bin\$Configuration\net7.0\PSFavoritePredictor.dll"
+        Source      = "$PSScriptRoot\Predictor\bin\$Configuration\$TargetFramework\PSFavoritePredictor.dll"
         Destination = "$PSScriptRoot\Module\Library\PSFavoritePredictor.dll"
     },
     @{
@@ -40,7 +45,9 @@ dotnet build $Project -c $Configuration -f net7.0
         Destination = "$PSScriptRoot\Module\LICENSE"
     }
 ) | ForEach-Object {
-    Remove-Item -Path $_.Destination -Force
+    if (Test-Path -Path $_.Destination) {
+        Remove-Item -Path $_.Destination -Force
+    }
     Copy-Item -Path $_.Source -Destination $_.Destination -Force
     Write-Output "Copied $($_.Source) to $($_.Destination)"
 }

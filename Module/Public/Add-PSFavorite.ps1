@@ -3,7 +3,7 @@
     Add the current command to the favorites list
 .DESCRIPTION
     Add the current command to the favorites list. The favorites list is stored in
-    the `AppData/PSFavorite/Favorites.txt` file.
+    the `AppData\Local\PSFavorite\Favorites.txt` file.
     The Favorites.txt file is automatically loaded in when the module is imported.
 .EXAMPLE
     Add-PSFavorite -Command "Get-Date"

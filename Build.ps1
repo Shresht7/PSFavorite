@@ -45,7 +45,9 @@ dotnet build $Project -c $Configuration -f $TargetFramework
         Destination = "$PSScriptRoot\Module\LICENSE"
     }
 ) | ForEach-Object {
-    Remove-Item -Path $_.Destination -Force
+    if (Test-Path -Path $_.Destination) {
+        Remove-Item -Path $_.Destination -Force
+    }
     Copy-Item -Path $_.Source -Destination $_.Destination -Force
     Write-Output "Copied $($_.Source) to $($_.Destination)"
 }

@@ -78,7 +78,7 @@ namespace PowerShell.Sample
         /// <param name="input">The input string</param>
         /// <param name="line">The line from the favorite's file</param>
         /// <returns>The score indicating how well the input matches the favorite's line</returns>
-        private int DetermineScore(string input, string line)
+        private static int DetermineScore(string input, string line)
         {
             int score = 0;
 

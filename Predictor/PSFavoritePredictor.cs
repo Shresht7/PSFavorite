@@ -81,12 +81,6 @@ namespace PowerShell.Sample
         {
             int score = 0;
 
-            // If the input is an exact match, give it a score of 10000 to make it the top suggestion.
-            if (line == input)
-            {
-                score += 10000;
-            }
-
             // If the input is contained in the line verbatim, give it a score of 1000
             if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
             {

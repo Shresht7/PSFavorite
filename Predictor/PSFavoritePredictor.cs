@@ -81,33 +81,27 @@ namespace PowerShell.Sample
         {
             int score = 0;
 
-            // If the input is contained in the line verbatim, give it a score of 1000
+            // If the input matches the start of the line exactly, add 10000 score to make it the top suggestion.
+            if (line.StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 10000;
+            }
+
+            // If the input appears in the line, in the exact same order, add 1000 score.
             if (line.Contains(input, StringComparison.OrdinalIgnoreCase))
             {
                 score += 1000;
             }
 
-            // If the input words are somewhere in the line, give it a score of 25 for each word.
-            string[] inputs = input.Split(' ');
-            string[] lines = line.Split(' ');
-            foreach (string word in inputs)
+            // If the input words appear in the line somewhere, add 25 points.
+            string[] inputWords = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (string word in inputWords)
             {
-                if (lines.Contains(word))
+                if (line.Contains(word, StringComparison.OrdinalIgnoreCase))
                 {
                     score += 25;
                 }
             }
-
-            // If the input characters are somewhere in the line, give it a score of 1 for each character.
-            char[] chars = line.ToCharArray();
-            foreach (char c in input.ToCharArray())
-            {
-                if (chars.Contains(c))
-                {
-                    score += 1;
-                }
-            }
-
 
             return score;
         }

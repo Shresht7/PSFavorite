@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
+using Microsoft.VisualBasic;
 
 namespace PowerShell.Sample
 {
@@ -59,7 +60,7 @@ namespace PowerShell.Sample
                 .Select(line => (Line: line, Score: DetermineScore(input, line))) // Determine the score for each line.
                 .Where(tuple => tuple.Score >= ScoreThreshold) // Filter out the lines below the score threshold.
                 .OrderByDescending(tuple => tuple.Score) // Order the list by the score in descending order.
-                .Select(tuple => new PredictiveSuggestion(tuple.Line, tuple.Score.ToString())) // Create a PredictiveSuggestion object for selected line.
+                .Select(tuple => new PredictiveSuggestion(tuple.Line, GetTooltip(tuple.Line))) // Create a PredictiveSuggestion object for selected line.
                 .ToList(); // Convert to a list of PredictiveSuggestion objects.
 
             // Return the list of suggestions.
@@ -104,6 +105,30 @@ namespace PowerShell.Sample
             }
 
             return score;
+        }
+
+        /// <summary>
+        /// Get the tooltip for the suggestion.
+        /// </summary>
+        /// <param name="line">The line from the favorite's file</param>
+        /// <returns>The tooltip for the suggestion</returns>
+        /// <remarks>
+        /// The tooltip is the part of the line after the first '#' character.
+        /// </remarks>
+        /// <example>
+        /// If the line is "Get-Process # Get the list of processes", the tooltip is "Get the list of processes".
+        /// </example>
+        private static string GetTooltip(string line)
+        {
+            string[] s = Strings.Split(line, "#");
+            if (s.Length > 1)
+            {
+                return s[1].Trim();
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         #region "interface methods for processing feedback"

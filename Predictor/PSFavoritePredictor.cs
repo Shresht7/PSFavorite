@@ -1,7 +1,6 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
-using Microsoft.VisualBasic;
 
 namespace PowerShell.Sample
 {
@@ -120,7 +119,7 @@ namespace PowerShell.Sample
         /// </example>
         private static string GetTooltip(string line)
         {
-            string[] s = Strings.Split(line, "#");
+            string[] s = line.Split('#');
             if (s.Length > 1)
             {
                 return s[1].Trim();

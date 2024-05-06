@@ -18,7 +18,10 @@
 function Add-PSFavorite(
     # The command to add to the favorites list.
     [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [string] $Command
+    [string] $Command,
+
+    # The path to the favorites list file.
+    [string] $FavoritesPath = $Script:FavoritesPath
 ) {
-    $Command | Out-File -FilePath $Script:FavoritesPath -Append
+    $Command | Out-File -FilePath $FavoritesPath -Append
 }

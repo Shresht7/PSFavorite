@@ -9,9 +9,12 @@
     Optimize-PSFavorites
     Sorts and removes duplicates from the favorites list.
 #>
-function Optimize-PSFavorites {
+function Optimize-PSFavorites(
+    # The path to the favorites list file.
+    [string] $FavoritesPath = $Script:FavoritesPath
+) {
     begin {
-        $Favorites = Get-Content -Path $Script:FavoritesPath
+        $Favorites = Get-Content -Path $FavoritesPath
     }
 
     process {
@@ -19,6 +22,6 @@ function Optimize-PSFavorites {
     }
 
     end {
-        $Favorites | Out-File -FilePath $Script:FavoritesPath
+        $Favorites | Out-File -FilePath $FavoritesPath
     }
 }

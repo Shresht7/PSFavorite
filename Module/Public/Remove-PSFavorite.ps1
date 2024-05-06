@@ -22,11 +22,14 @@ function Remove-PSFavorite {
         # The command(s) to remove from the favorites list
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
-        [PSObject[]] $Command
+        [PSObject[]] $Command,
+
+        # The path to the favorites list file
+        [string] $FavoritesPath = $Script:FavoritesPath
     )
 
     # Read the Favorites.txt content
-    $Favorites = Get-Content -Path $Script:FavoritesPath
+    $Favorites = Get-Content -Path $FavoritesPath
 
     foreach ($Cmd in $Command) {
         # Extract the command name from the PSObject or use the provided string
@@ -44,7 +47,7 @@ function Remove-PSFavorite {
 
     # Write the filtered Favorites out to the Favorites.txt file
     if ($PSCmdlet.ShouldProcess("Save changes to the favorites list?")) {
-        $Favorites | Out-File -FilePath $Script:FavoritesPath
+        $Favorites | Out-File -FilePath $FavoritesPath
         Write-Verbose "Changes saved to the favorites list."
     }
 

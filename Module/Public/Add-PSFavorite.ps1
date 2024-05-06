@@ -13,7 +13,7 @@
     Add the "Get-Date" command to the favorites list.
 .NOTES
     The PSFavorites module ships with a keybinding (`ctrl+shift+*`) to mark
-    the current command to the favorites list. So you don't need to use this cmdlet.
+    the current command to the favorites list. So you don't have to use this cmdlet.
 #>
 function Add-PSFavorite(
     # The command to add to the favorites list.

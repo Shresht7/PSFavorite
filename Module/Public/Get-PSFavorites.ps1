@@ -11,9 +11,12 @@
     Get-PSFavorites | Out-GridView
     Get the list of commands in the favorites list and display it in a GridView.
 #>
-function Get-PSFavorites {
+function Get-PSFavorites(
+    # The path to the favorites list file.
+    [string] $FavoritesPath = $Script:FavoritesPath
+) {
     # Get the favorites from the file
-    $Favorites = Get-Content -Path $Script:FavoritesPath
+    $Favorites = Get-Content -Path $FavoritesPath
 
     # Convert the favorites to a PSCustomObject
     foreach ($Favorite in $Favorites) {

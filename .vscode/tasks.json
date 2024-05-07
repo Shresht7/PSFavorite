@@ -24,7 +24,7 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "Invoke-Pester",
+            "command": "Invoke-Pester -Output Detailed",
             "args": [],
             "group": {
                 "kind": "test",

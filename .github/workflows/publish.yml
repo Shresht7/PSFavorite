@@ -1,0 +1,25 @@
+name: Publish PowerShell Module
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-to-gallery:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        shell: pwsh
+        run: Invoke-Pester -Output Detailed -PassThru
+
+    # TODO: Enable this step
+    #   - name: Build and publish
+    #     env:
+    #       NUGET_KEY: ${{ secrets.NUGET_KEY }}
+    #     shell: pwsh
+    #     run: |
+    #       ./Build.ps1 -Configuration Release
+    #       Publish-Module -Path "./Module" -NuGetApiKey $env:NUGET_KEY -Verbose

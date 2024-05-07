@@ -4,12 +4,16 @@ This module allows you to mark commands as **favorites**. Your favorite commands
 
 Favorites do not replace history, they complement it. The history tracks _everything_ you've done, and favorites track the things that you've _deemed important_.
 
+![demo](./demo.gif)
+
 ---
 
 ## 📘 Usage
 
 
 Write a command and press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>*</kbd> to mark it as _favorite_.
+
+![screenshot](./add-to-favorites.png)
 
 > `Note:` Add a helpful comment to describe the command for future reference.
 
@@ -22,8 +26,6 @@ PS C:\> "Get-Command | Get-Random | Get-Help    # Get help about a random comman
 > `Note:` Remember to wrap the expressions in quotes!
 
 Your _favorite commands_ will start appearing as suggestions in the **PSReadLine Predictor View**.
-
-<!-- TODO: Add Screenshot or GIF -->
 
 ---
 
@@ -74,6 +76,14 @@ Import-Module -Name PSFavorite
 ### 📜 Scripts
 
 - [`Build.ps1`](./Build.ps1) - Builds the PowerShell module
+
+### 🧪 Testing
+
+This module uses [Pester](https://pester.dev/) for testing. Run the following command to test the PowerShell module.
+
+```pwsh
+Invoke-Pester
+```
 
 ## 📕 Reference
 

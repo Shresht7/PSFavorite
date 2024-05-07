@@ -15,4 +15,5 @@ jobs:
               uses: actions/checkout@v4
         
             - name: Run tests
+              shell: pwsh
               run: Invoke-Pester -Output Detailed -PassThru

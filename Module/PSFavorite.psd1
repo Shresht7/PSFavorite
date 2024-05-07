@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule    = 'PSFavorite.psm1'
+    RootModule        = 'PSFavorite.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion     = '0.3.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID          = '3f05195e-e143-4716-9caa-aff7e31e2fac'
+    GUID              = '3f05195e-e143-4716-9caa-aff7e31e2fac'
 
     # Author of this module
-    Author        = 'Shresht7'
+    Author            = 'Shresht7'
 
     # Company or vendor of this module
     # CompanyName   = 'Shresht7'
 
     # Copyright statement for this module
-    Copyright     = '(c) Shresht7. All rights reserved.'
+    Copyright         = '(c) Shresht7. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description   = 'This module allows you to mark commands as favorites that later show up as PSReadline predictions'
+    Description       = 'This module allows you to mark commands as favorites that later show up as PSReadline predictions'
 
     # Minimum version of the PowerShell engine required by this module
-    # PowerShellVersion = ''
+    PowerShellVersion = '7.2.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -51,7 +51,9 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules   = @(
+        @{ModuleName = 'PSReadline'; ModuleVersion = '2.2.2' }
+    )
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -66,7 +68,7 @@
     # FormatsToProcess = @()
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    NestedModules = @("Library/PSFavoritePredictor.dll")
+    NestedModules     = @("Library/PSFavoritePredictor.dll")
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     # FunctionsToExport = @()
@@ -90,18 +92,18 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData   = @{
+    PrivateData       = @{
 
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags       = @('PSFavorite', 'Favorites', 'PSReadline', 'Predictor')
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/Shresht7/PSFavorite/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/Shresht7/PSFavorite'
 
             # A URL to an icon representing this module.
             # IconUri = ''

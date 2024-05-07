@@ -1,10 +1,10 @@
-# Path to the test favorite file
-$FavoritesPath = "$PSScriptRoot\..\Favorites.txt"
-
 Describe "Add-PSFavorite" {
-
+    
+    
     # Before all, import the module and initialize the favorites list
     BeforeAll {
+        # Path to the test favorite file
+        $FavoritesPath = "$PSScriptRoot\..\Favorites.txt"
         Import-Module "$PSScriptRoot\..\..\PSFavorite.psm1"
         Initialize-PSFavorite -FavoritesPath $FavoritesPath
     }

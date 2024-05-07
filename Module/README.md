@@ -77,6 +77,14 @@ Import-Module -Name PSFavorite
 
 - [`Build.ps1`](./Build.ps1) - Builds the PowerShell module
 
+### 🧪 Testing
+
+This module uses [Pester](https://pester.dev/) for testing. Run the following command to test the PowerShell module.
+
+```pwsh
+Invoke-Pester
+```
+
 ## 📕 Reference
 
 - https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/create-cmdline-predictor?view=powershell-7.3

@@ -7,12 +7,14 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
+      - name: Checkout Repository Code
         uses: actions/checkout@v6
 
       - name: Setup .NET
@@ -20,21 +22,37 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      # Build the C# predictor and copy the DLL to the Module directory
       - name: Build Module
         shell: pwsh
         run: ./Build.ps1 -Configuration Release
 
-      - name: Run tests
+      # Ensure the built module passes all tests before proceeding
+      - name: Run Tests
         shell: pwsh
         run: |
           Import-Module ./Module/PSFavorite.psd1 -Force
           Invoke-Pester -Path ./Module/Tests -Output Detailed -PassThru
 
+      # Zip the entire module directory (including the DLL) for attestation and release
+      - name: Zip Module
+        shell: pwsh
+        run: Compress-Archive -Path ./Module -DestinationPath ./PSFavorite.zip
+
+      # actions/attest@v4 is the modern, consolidated action for all attestations.
+      # See: https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+      - name: Attest Build Provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ github.workspace }}/PSFavorite.zip
+
+      # Create a release, attach the zipped module, and auto-generate notes from commits
+      # See: https://cli.github.com/manual/gh_release
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} \
+          gh release create ${{ github.ref_name }} ./PSFavorite.zip \
           --title "Release ${{ github.ref_name }}" \
           --generate-notes
 

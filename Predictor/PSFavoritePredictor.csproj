@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.1" />
     <PackageReference Include="System.Management.Automation" Version="7.4.1" />
@@ -9,6 +9,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>PSFavoritePredictor</RootNamespace>
+    <AssemblyName>PSFavoritePredictor</AssemblyName>
+    <Version>0.3.0</Version>
+    <Description>Predictor for the PSFavorite module</Description>
   </PropertyGroup>
 
 </Project>

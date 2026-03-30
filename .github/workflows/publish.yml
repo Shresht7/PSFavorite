@@ -1,11 +1,15 @@
 name: Publish PowerShell Module
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
 
 jobs:
-  publish-to-gallery:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -25,6 +29,14 @@ jobs:
         run: |
           Import-Module ./Module/PSFavorite.psd1 -Force
           Invoke-Pester -Path ./Module/Tests -Output Detailed -PassThru
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+          --title "Release ${{ github.ref_name }}" \
+          --generate-notes
 
       # TODO: Enable this when ready to publish to PowerShell Gallery
       # - name: Publish to PowerShell Gallery

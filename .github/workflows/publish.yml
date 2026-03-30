@@ -9,17 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build Module
+        shell: pwsh
+        run: ./Build.ps1 -Configuration Release
 
       - name: Run tests
         shell: pwsh
-        run: Invoke-Pester -Output Detailed -PassThru
+        run: |
+          Import-Module ./Module/PSFavorite.psd1 -Force
+          Invoke-Pester -Path ./Module/Tests -Output Detailed -PassThru
 
-    # TODO: Enable this step
-    #   - name: Build and publish
-    #     env:
-    #       NUGET_KEY: ${{ secrets.NUGET_KEY }}
-    #     shell: pwsh
-    #     run: |
-    #       ./Build.ps1 -Configuration Release
-    #       Publish-Module -Path "./Module" -NuGetApiKey $env:NUGET_KEY -Verbose
+      # TODO: Enable this when ready to publish to PowerShell Gallery
+      # - name: Publish to PowerShell Gallery
+      #   env:
+      #     NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      #   shell: pwsh
+      #   run: |
+      #     Publish-Module -Path "./Module" -NuGetApiKey $env:NUGET_KEY -Verbose

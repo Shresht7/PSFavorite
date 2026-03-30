@@ -17,10 +17,10 @@ Write a command and press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>*</kbd> to m
 
 > `Note:` Add a helpful comment to describe the command for future reference.
 
-**Alternatively**, use the `Add-Favorite` cmdlet
+**Alternatively**, use the `Add-PSFavorite` cmdlet
 
 ```powershell
-PS C:\> "Get-Command | Get-Random | Get-Help    # Get help about a random command" | Add-Favorite
+PS C:\> "Get-Command | Get-Random | Get-Help    # Get help about a random command" | Add-PSFavorite
 ```
 
 > `Note:` Remember to wrap the expressions in quotes!

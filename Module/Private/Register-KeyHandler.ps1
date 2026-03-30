@@ -1,8 +1,8 @@
-# Register the Add-Favorite KeyHandler
+# Register the Add-PSFavorite KeyHandler
 # Add the current command to the favorites list when the
 # keybinding (default: `Ctrl+Shift+*`) is pressed.
 function Register-KeyHandler(
-    # The keybinding to register the Add-Favorite KeyHandler
+    # The keybinding to register the Add-PSFavorite KeyHandler
     [string] $Key = "Ctrl+Shift+*"
 ) {
     Set-PSReadLineKeyHandler -Key $Key `

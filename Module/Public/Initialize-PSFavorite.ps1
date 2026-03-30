@@ -36,6 +36,6 @@ function Initialize-PSFavorite(
     # Initialize the configuration file
     Initialize-Configuration @Params
 
-    # Register the Add-Favorite KeyHandler
+    # Register the Add-PSFavorite KeyHandler
     Register-KeyHandler -Key $Key
 }

@@ -26,15 +26,14 @@ function Initialize-Configuration(
     # If the FavoritesPath parameter is specified, use it ...
     if ($FavoritesPath) {
         $Script:FavoritesPath = $FavoritesPath
-        return
     }
     # ... otherwise, 
     else {
         # Create the PSFavorite directory if it doesn't already exist
-        $local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "~/.local/share" }
+        $local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "$HOME/.local/share" }
         $folder = Join-Path $local $ModuleName
         if (!(Test-Path -Path $folder)) {
-            New-Item -ItemType Directory -Path $folder
+            New-Item -ItemType Directory -Path $folder -Force
         }
     
         # Path to the Favorites file
@@ -42,7 +41,7 @@ function Initialize-Configuration(
     
         # If the file doesn't exist, create an empty file
         if (!(Test-Path -Path $Script:FavoritesPath)) {
-            New-Item -ItemType File -Path $Script:FavoritesPath
+            New-Item -ItemType File -Path $Script:FavoritesPath -Force
         }
     }
 

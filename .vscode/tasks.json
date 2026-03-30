@@ -6,10 +6,13 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "./Build.ps1",
+            "command": "pwsh",
             "args": [
+                "-NoProfile",
+                "-Command",
+                "./Build.ps1 -Verbose",
                 "-Configuration",
-                "Release",
+                "Debug",
             ],
             "group": {
                 "kind": "build",
@@ -24,8 +27,12 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "Invoke-Pester -Output Detailed",
-            "args": [],
+            "command": "pwsh",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "./Build.ps1; Import-Module ./Module/PSFavorite.psd1 -Force; Invoke-Pester -Path ./Module/Tests -Output Detailed"
+            ],
             "group": {
                 "kind": "test",
                 "isDefault": true

@@ -1,25 +1,80 @@
 name: Publish PowerShell Module
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
 
 jobs:
-  publish-to-gallery:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
+      - name: Checkout Repository Code
+        uses: actions/checkout@v6
 
-      - name: Run tests
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      # Build the C# predictor and copy the DLL to the Module directory
+      - name: Build Module
         shell: pwsh
-        run: Invoke-Pester -Output Detailed -PassThru
+        run: ./Build.ps1 -Configuration Release
 
-    # TODO: Enable this step
-    #   - name: Build and publish
-    #     env:
-    #       NUGET_KEY: ${{ secrets.NUGET_KEY }}
-    #     shell: pwsh
-    #     run: |
-    #       ./Build.ps1 -Configuration Release
-    #       Publish-Module -Path "./Module" -NuGetApiKey $env:NUGET_KEY -Verbose
+      # Ensure the config directory and file exist for both Linux and Windows runners, since the tests expect them to be present.
+      - name: Create Config Directory and File (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p ~/.local/share/PSFavorite
+          echo '' > ~/.local/share/PSFavorite/Favorites.txt
+
+      - name: Create Config Directory and File (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $configPath = "$env:LOCALAPPDATA\PSFavorite"
+          New-Item -ItemType Directory -Path $configPath -Force | Out-Null
+          New-Item -ItemType File -Path "$configPath\Favorites.txt" -Force | Out-Null
+
+      # Ensure the built module passes all tests before proceeding
+      - name: Run Tests
+        shell: pwsh
+        run: |
+          Import-Module ./Module/PSFavorite.psd1 -Force
+          Invoke-Pester -Path ./Module/Tests -Output Detailed -PassThru
+
+      # Zip the entire module directory (including the DLL) for attestation and release
+      - name: Zip Module
+        shell: pwsh
+        run: Compress-Archive -Path ./Module -DestinationPath ./PSFavorite.zip
+
+      # actions/attest@v4 is the modern, consolidated action for all attestations.
+      # See: https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+      - name: Attest Build Provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ github.workspace }}/PSFavorite.zip
+
+      # Create a release, attach the zipped module, and auto-generate notes from commits
+      # See: https://cli.github.com/manual/gh_release
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} ./PSFavorite.zip \
+          --title "Release ${{ github.ref_name }}" \
+          --generate-notes
+
+      # TODO: Enable this when ready to publish to PowerShell Gallery
+      # - name: Publish to PowerShell Gallery
+      #   env:
+      #     NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      #   shell: pwsh
+      #   run: |
+      #     Publish-Module -Path "./Module" -NuGetApiKey $env:NUGET_KEY -Verbose

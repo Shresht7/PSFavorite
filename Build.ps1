@@ -68,18 +68,29 @@ $Items = @(
     }
 )
 
-# Copy items with Error Handling for Locks
+# Copy items with Error Handling
 foreach ($item in $Items) {
     try {
+        # Ensure the destination directory exists
+        $destDir = Split-Path -Path $item.Destination -Parent
+        if (!(Test-Path -Path $destDir)) {
+            New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+            Write-Verbose "Created directory: $destDir"
+        }
+
+        # If the destination file already exists, remove it before copying the new file
         if (Test-Path -Path $item.Destination) {
             Remove-Item -Path $item.Destination -Force
         }
+
+        # Copy the file to the destination
         Copy-Item -Path $item.Source -Destination $item.Destination -Force
         Write-Output "Copied $($item.Source) to $($item.Destination)"
     }
     catch {
-        # Specific handling for the locked DLL issue
-        if ($item.Destination -like "*PSFavoritePredictor.dll") {
+        $msg = $_.Exception.Message
+        # Specific handling for the locked DLL issue vs other errors
+        if ($item.Destination -like "*PSFavoritePredictor.dll" -and ($msg -like "*used by another process*" -or $msg -like "*Access to the path*denied*")) {
             Write-Host ""
             Write-Host "CRITICAL ERROR: Access Denied to PSFavoritePredictor.dll" -ForegroundColor Red
             Write-Host "The DLL is likely locked because the module is loaded in an active PowerShell session." -ForegroundColor Yellow
@@ -87,10 +98,11 @@ foreach ($item in $Items) {
             Write-Host ""
         }
         else {
-            Write-Error "Failed to copy $($item.Source) to $($item.Destination): $($_.Exception.Message)"
+            Write-Error "Failed to copy $($item.Source) to $($item.Destination): $msg"
         }
         exit 1
     }
 }
+
 
 Write-Host "Build and Copy completed successfully!" -ForegroundColor Green

@@ -10,7 +10,6 @@ Get-ChildItem -Path "$PSScriptRoot\Private" -Filter "*.ps1" | ForEach-Object {
 # Import Public Functions
 Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
     . $_.FullName
-    Export-ModuleMember -Function $_.BaseName
 }
 
 # * ============== *

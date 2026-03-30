@@ -9,7 +9,7 @@
             "command": "./Build.ps1",
             "args": [
                 "-Configuration",
-                "Release",
+                "Debug",
             ],
             "group": {
                 "kind": "build",
@@ -24,8 +24,12 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "Invoke-Pester -Output Detailed",
-            "args": [],
+            "command": "pwsh",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "./Build.ps1; Import-Module ./Module/PSFavorite.psd1 -Force; Invoke-Pester -Path ./Module/Tests -Output Detailed"
+            ],
             "group": {
                 "kind": "test",
                 "isDefault": true

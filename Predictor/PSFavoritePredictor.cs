@@ -2,7 +2,7 @@
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
 
-namespace PowerShell.Sample
+namespace PSFavorite
 {
     public class PSFavoritePredictor : ICommandPredictor
     {

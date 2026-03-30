@@ -1,19 +1,30 @@
 name: Test
 
 on:
-    push:
-      branches: [ "main" ]
-    pull_request:
-      branches: [ "main" ]
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-    test:
-        name: Pester test
-        runs-on: ubuntu-latest
-        steps:
-            - name: Check out repository code
-              uses: actions/checkout@v4
-        
-            - name: Run tests
-              shell: pwsh
-              run: Invoke-Pester -Output Detailed -PassThru
+  test:
+    name: Pester test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build Module
+        shell: pwsh
+        run: ./Build.ps1 -Configuration Release
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          Import-Module ./Module/PSFavorite.psd1 -Force
+          Invoke-Pester -Path ./Module/Tests -Output Detailed -PassThru

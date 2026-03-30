@@ -27,6 +27,21 @@ jobs:
         shell: pwsh
         run: ./Build.ps1 -Configuration Release
 
+      # Ensure the config directory and file exist for both Linux and Windows runners, since the tests expect them to be present.
+      - name: Create Config Directory and File (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p ~/.local/share/PSFavorite
+          echo '' > ~/.local/share/PSFavorite/Favorites.txt
+
+      - name: Create Config Directory and File (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $configPath = "$env:APPDATA\PSFavorite"
+          New-Item -ItemType Directory -Path $configPath -Force | Out-Null
+          New-Item -ItemType File -Path "$configPath\Favorites.txt" -Force | Out-Null
+
       # Ensure the built module passes all tests before proceeding
       - name: Run Tests
         shell: pwsh

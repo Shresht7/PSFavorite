@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./Build.ps1 -Configuration Release
 
+      - name: Create Config Directory (Linux)
+        if: runner.os == 'Linux'
+        run: mkdir -p ~/.local/share/PSFavorite
+
       - name: Run Tests
         shell: pwsh
         run: |

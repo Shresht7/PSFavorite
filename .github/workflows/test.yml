@@ -44,7 +44,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $configPath = "$env:APPDATA\PSFavorite"
+          $configPath = "$env:LOCALAPPDATA\PSFavorite"
           New-Item -ItemType Directory -Path $configPath -Force | Out-Null
           New-Item -ItemType File -Path "$configPath\Favorites.txt" -Force | Out-Null
 

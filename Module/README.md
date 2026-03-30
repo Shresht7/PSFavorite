@@ -75,19 +75,31 @@ Import-Module -Name PSFavorite
 
 ### 📜 Scripts
 
-- [`Build.ps1`](./Build.ps1) - Builds the PowerShell module
+- [`Build.ps1`](./Build.ps1) - Builds the C# predictor and copies the DLL to the Module directory.
+
+```pwsh
+./Build.ps1 -Configuration Release
+```
 
 ### 🧪 Testing
 
-This module uses [Pester](https://pester.dev/) for testing. Run the following command to test the PowerShell module.
+This module uses [Pester](https://pester.dev/) for testing. To test the module, first build it and then run the following command.
 
 ```pwsh
-Invoke-Pester
+./Build.ps1
+Import-Module ./Module/PSFavorite.psd1 -Force
+Invoke-Pester -Path ./Module/Tests
 ```
+
+### 🚢 Publishing
+
+The module is automatically published to the PowerShell Gallery when a new **Release** is created on GitHub. 
+
+Ensure the `ModuleVersion` in `Module/PSFavorite.psd1` is updated before creating a release.
 
 ## 📕 Reference
 
-- https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/create-cmdline-predictor?view=powershell-7.3
+- https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/create-cmdline-predictor
 
 ---
 

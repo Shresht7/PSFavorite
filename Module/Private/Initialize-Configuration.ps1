@@ -27,15 +27,16 @@ function Initialize-Configuration(
     [string] $FavoritesPath
 ) {
 
+    # Determine the local application data directory based on the operating system
+    $Local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "$HOME/.local/share" }
+
     # If the FavoritesPath parameter is specified, use it ...
     if ($FavoritesPath) {
         $Script:FavoritesPath = $FavoritesPath
     }
     # ... otherwise, use the default path
     else {
-        # Create the PSFavorite directory if it doesn't already exist
-        $local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "$HOME/.local/share" }
-        $Script:FavoritesPath = Join-Path $local $ModuleName $FavoritesFile    
+        $Script:FavoritesPath = Join-Path $Local $ModuleName $FavoritesFile
     }
 
     # Create the directory if it doesn't exist

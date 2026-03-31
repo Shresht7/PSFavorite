@@ -63,7 +63,7 @@ namespace PSFavorite
         /// This is necessary because the predictor may be called from multiple threads concurrently, and we want to avoid race conditions
         /// when loading or accessing the favorites.
         /// </summary>
-        private static readonly object _favoritesLock = new object();
+        private static readonly Lock _favoritesLock = new();
 
         /// <summary>
         /// Initialize the predictor with an explicit favorites path.

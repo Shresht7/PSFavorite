@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
+using System.Management.Automation.Language;
 
 namespace PSFavorite
 {
@@ -147,7 +143,7 @@ namespace PSFavorite
             {
                 return default;
             }
-            
+
             string[] favoritesSnapshot;
             lock (_favoritesLock)
             {
@@ -216,22 +212,34 @@ namespace PSFavorite
         /// <param name="line">The line from the favorite's file</param>
         /// <returns>The tooltip for the suggestion</returns>
         /// <remarks>
-        /// The tooltip is the part of the line after the first '#' character.
+        /// Uses PowerShell AST parser to properly extract comments, handling '#' inside strings.
         /// </remarks>
         /// <example>
         /// If the line is "Get-Process # Get the list of processes", the tooltip is "Get the list of processes".
         /// </example>
         private static string GetTooltip(string line)
         {
-            string[] s = line.Split('#');
-            if (s.Length > 1)
-            {
-                return s[1].Trim();
-            }
-            else
+            if (string.IsNullOrWhiteSpace(line))
             {
                 return string.Empty;
             }
+
+            _ = Parser.ParseInput(line, out Token[] tokens, out _);
+
+            if (tokens == null)
+            {
+                return string.Empty;
+            }
+
+            foreach (var token in tokens)
+            {
+                if (token.Kind == TokenKind.Comment)
+                {
+                    return token.Text.TrimStart('#').Trim();
+                }
+            }
+
+            return string.Empty;
         }
 
         #endregion

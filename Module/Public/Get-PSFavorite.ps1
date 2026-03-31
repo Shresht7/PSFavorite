@@ -21,17 +21,17 @@ function Get-PSFavorite(
 
     # Convert the favorites to a PSCustomObject
     foreach ($Favorite in $Favorites) {
-        $Command, $Description = $Favorite -split "\s*#\s*"
+        $Command, $Description = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($Favorite)
 
         # If the favorite lacks a description, use the command itself as it's description
-        if ($null -eq $Description) {
+        if ([string]::IsNullOrEmpty($Description)) {
             $Description = $Command
         }
 
         # Output the favorite as a PSCustomObject
         [PSCustomObject]@{
-            Command     = $Command.Trim()
-            Description = $Description.Trim()
+            Command     = $Command
+            Description = $Description
         }
     }
 }

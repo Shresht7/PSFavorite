@@ -22,9 +22,8 @@ function Register-KeyHandler(
             return
         }
 
-        # Use C# GetTooltip for proper command/comment extraction
-        $comment = [PSFavorite.PSFavoritePredictor]::GetTooltip($line)
-        $command = $line.Substring(0, $line.Length - $comment.Length).TrimEnd().TrimEnd('#').Trim()
+        # Use C# ParseFavoriteLine for proper command/comment extraction
+        $command, $comment = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($line)
 
         # Check for duplicate using simple file search
         $favoritesPath = $Script:FavoritesPath

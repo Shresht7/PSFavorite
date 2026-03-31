@@ -6,7 +6,7 @@
 .PARAMETER Configuration
     The configuration of the build (`Debug` or `Release`) [Default: `Debug`]
 .PARAMETER TargetFramework
-    The target framework of the build (`net7.0` or `net8.0`) [Default: `net8.0`]
+    The target framework of the build (`net8.0`, `net9.0` or `net10.0`) [Default: `net9.0`]
 .PARAMETER Clean
     If specified, cleans the project before building.
 .EXAMPLE
@@ -24,10 +24,10 @@ param(
     [ValidateSet('Debug', 'Release')]
     [string] $Configuration = 'Debug',
 
-    # The target framework of the build (`net7.0` or `net8.0`) [Default: `net8.0`]
-    [ValidateSet("net7.0", "net8.0")]
+    # The target framework of the build (`net8.0`, `net9.0` or `net10.0`) [Default: `net9.0`]
+    [ValidateSet("net8.0", "net9.0", "net10.0")]
     [ValidateNotNullOrEmpty()]
-    [string] $TargetFramework = "net8.0",
+    [string] $TargetFramework = "net9.0",
 
     # Clean the project before building
     [switch] $Clean

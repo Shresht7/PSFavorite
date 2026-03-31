@@ -155,15 +155,24 @@ namespace PSFavorite
                 return default;
             }
 
-            List<PredictiveSuggestion> suggestions = favoritesSnapshot
-                .Select(line => (Line: line, Score: DetermineScore(input, line)))               // Determine the score for each line.
-                .Where(tuple => tuple.Score >= ScoreThreshold)                                  // Filter out the lines below the score threshold.
-                .OrderByDescending(tuple => tuple.Score)                                        // Order the list by the score in descending order.
-                .Select(tuple => new PredictiveSuggestion(tuple.Line, GetTooltip(tuple.Line)))  // Create a PredictiveSuggestion object for selected line.
-                .ToList();                                                                      // Convert to a list of PredictiveSuggestion objects.
+            var suggestions = new List<(int Score, PredictiveSuggestion Suggestion)>();
+
+            foreach (var line in favoritesSnapshot)
+            {
+                int score = DetermineScore(input, line);
+                if (score >= ScoreThreshold)
+                {
+                    suggestions.Add((score, new PredictiveSuggestion(line, GetTooltip(line))));
+                }
+            }
+
+            var result = suggestions
+                .OrderByDescending(t => t.Score)
+                .Select(t => t.Suggestion)
+                .ToList();
 
             // Return the list of suggestions.
-            return new SuggestionPackage(suggestions);
+            return new SuggestionPackage(result);
         }
 
         /// <summary>

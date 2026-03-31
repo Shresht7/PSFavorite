@@ -34,7 +34,7 @@ param(
 )
 
 # Path to the Predictor project
-$Project = "$PSScriptRoot\Predictor\PSFavoritePredictor.csproj"
+$Project = Join-Path $PSScriptRoot "Predictor" "PSFavoritePredictor.csproj"
 
 # Clean the project if the -Clean switch is specified
 if ($Clean) {
@@ -55,16 +55,16 @@ if ($LASTEXITCODE -ne 0) {
 # Items to copy to the Module directory
 $Items = @(
     @{
-        Source      = "$PSScriptRoot\Predictor\bin\$Configuration\$TargetFramework\PSFavoritePredictor.dll"
-        Destination = "$PSScriptRoot\Module\Library\PSFavoritePredictor.dll"
+        Source      = Join-Path $PSScriptRoot "Predictor" "bin" $Configuration $TargetFramework "PSFavoritePredictor.dll"
+        Destination = Join-Path $PSScriptRoot "Module" "Library" "PSFavoritePredictor.dll"
     },
     @{
-        Source      = "$PSScriptRoot\README.md"
-        Destination = "$PSScriptRoot\Module\README.md"
+        Source      = Join-Path $PSScriptRoot "README.md"
+        Destination = Join-Path $PSScriptRoot "Module" "README.md"
     },
     @{
-        Source      = "$PSScriptRoot\LICENSE"
-        Destination = "$PSScriptRoot\Module\LICENSE"
+        Source      = Join-Path $PSScriptRoot "LICENSE"
+        Destination = Join-Path $PSScriptRoot "Module" "LICENSE"
     }
 )
 

@@ -85,6 +85,15 @@ namespace PSFavorite
         }
 
         /// <summary>
+        /// Reload the favorites from the file. Call this after modifying the favorites file
+        /// to immediately reflect changes in the predictor.
+        /// </summary>
+        public static void Reload()
+        {
+            LoadFavoritesIfExists();
+        }
+
+        /// <summary>
         /// Load the favorites from the file if it exists. If any error occurs, set favorites to an empty array.
         /// </summary>
         private static void LoadFavoritesIfExists()

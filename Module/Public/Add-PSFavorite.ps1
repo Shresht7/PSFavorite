@@ -24,4 +24,5 @@ function Add-PSFavorite(
     [string] $FavoritesPath = $Script:FavoritesPath
 ) {
     $Command | Out-File -FilePath $FavoritesPath -Append
+    [PSFavorite.PSFavoritePredictor]::Reload()
 }

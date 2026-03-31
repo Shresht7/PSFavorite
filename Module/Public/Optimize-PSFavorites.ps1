@@ -23,5 +23,6 @@ function Optimize-PSFavorites(
 
     end {
         $Favorites | Out-File -FilePath $FavoritesPath
+        [PSFavorite.PSFavoritePredictor]::Reload()
     }
 }

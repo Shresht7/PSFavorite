@@ -26,9 +26,10 @@ function Register-KeyHandler(
         $comment = [PSFavorite.PSFavoritePredictor]::GetTooltip($line)
         $command = $line.Substring(0, $line.Length - $comment.Length).TrimEnd().TrimEnd('#').Trim()
 
-        # Check for duplicate
-        $existing = Get-PSFavorites | Where-Object { $_.Command -eq $command }
-        if ($existing) {
+        # Check for duplicate using simple file search
+        $favoritesPath = $Script:FavoritesPath
+        $pattern = "^" + [regex]::Escape($command) + "(?:\s|#|$)"
+        if (Select-String -Path $favoritesPath -Pattern $pattern -Quiet) {
             Write-Host ($PSStyle.Foreground.Yellow + "Already in Favorites:" + $PSStyle.Reset + " $command")
             return
         }

@@ -276,7 +276,19 @@ namespace PSFavorite
         public void OnImport()
         {
             var predictor = new PSFavoritePredictor(Identifier);
-            SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
+            try
+            {
+                SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // The predictor may already be registered (e.g., repeated module import in the same process).
+                // Treat duplicate registration as a no-op to make initialization idempotent.
+                if (!ex.Message.Contains("already registered"))
+                {
+                    throw;
+                }
+            }
         }
 
         /// <summary>

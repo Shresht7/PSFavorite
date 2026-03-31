@@ -23,7 +23,6 @@ function Initialize-Configuration(
     [string] $FavoritesFile = "Favorites.txt",
 
     # Path to the configuration file
-    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
     [string] $FavoritesPath
 ) {
 

@@ -124,9 +124,20 @@ namespace PSFavorite
             {
                 return default;
             }
+            
+            string[] favoritesSnapshot;
+            lock (_favoritesLock)
+            {
+                favoritesSnapshot = _favorites;
+            }
 
-            List<PredictiveSuggestion> suggestions = _favorites
-                .Select(line => (Line: line!, Score: DetermineScore(input, line!)))             // Determine the score for each line.
+            if (favoritesSnapshot is null || favoritesSnapshot.Length == 0)
+            {
+                return default;
+            }
+
+            List<PredictiveSuggestion> suggestions = favoritesSnapshot
+                .Select(line => (Line: line, Score: DetermineScore(input, line)))               // Determine the score for each line.
                 .Where(tuple => tuple.Score >= ScoreThreshold)                                  // Filter out the lines below the score threshold.
                 .OrderByDescending(tuple => tuple.Score)                                        // Order the list by the score in descending order.
                 .Select(tuple => new PredictiveSuggestion(tuple.Line, GetTooltip(tuple.Line)))  // Create a PredictiveSuggestion object for selected line.

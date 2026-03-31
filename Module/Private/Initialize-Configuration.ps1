@@ -12,8 +12,8 @@
     Initialize-Configuration
     This example initializes the configuration using the default FavoritesPath value.
 .EXAMPLE
-    Initialize-Configuration -FavoritesPath "C:\MyFavorites\Favorites.txt"
-    This example initializes the configuration using a custom FavoritesPath value.
+    Initialize-Configuration -FavoritesPath "C:\MyFavorites\Favorites.txt" -Verbose
+    This example initializes the configuration using a custom FavoritesPath value and shows verbose output.
 #>
 function Initialize-Configuration(
     # Name of the parent folder
@@ -33,20 +33,25 @@ function Initialize-Configuration(
     # If the FavoritesPath parameter is specified, use it ...
     if ($FavoritesPath) {
         $Script:FavoritesPath = $FavoritesPath
+        Write-Verbose "Using custom FavoritesPath: $Script:FavoritesPath"
     }
     # ... otherwise, use the default path
     else {
         $Script:FavoritesPath = Join-Path $Local $ModuleName $FavoritesFile
+        Write-Verbose "Using default FavoritesPath: $Script:FavoritesPath"
     }
 
     # Create the directory if it doesn't exist
     $folder = Split-Path $Script:FavoritesPath
     if (-not (Test-Path -Path $folder)) {
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
+        Write-Verbose "Created directory: $folder"
     }
 
     # Create the Favorites file if it doesn't exist
     if (-not (Test-Path -Path $Script:FavoritesPath)) {
         New-Item -ItemType File -Path $Script:FavoritesPath -Force | Out-Null
+        Write-Verbose "Created file: $Script:FavoritesPath"
     }
+
 }

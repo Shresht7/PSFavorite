@@ -275,7 +275,7 @@ namespace PSFavorite
             {
                 SubsystemManager.UnregisterSubsystem(SubsystemKind.CommandPredictor, new Guid(Identifier));
             }
-            catch (InvalidOperationException ex) when (ex.Message.Contains("not registered"))
+            catch (InvalidOperationException)
             {
                 // Predictor was already unregistered or never registered; no-op.
             }

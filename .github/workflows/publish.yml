@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
       # Build the C# predictor and copy the DLL to the Module directory
       - name: Build Module

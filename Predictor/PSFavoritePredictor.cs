@@ -226,7 +226,7 @@ namespace PSFavorite
         /// <example>
         /// If the line is "Get-Process # Get the list of processes", the tooltip is "Get the list of processes".
         /// </example>
-        private static string GetTooltip(string line)
+        public static string GetTooltip(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
             {

@@ -44,8 +44,5 @@ function Register-KeyHandler(
 
         # Show notification
         Write-Host ($PSStyle.Foreground.Yellow + "⭐ Marked as Favorite:" + $PSStyle.Reset + " $command " + $PSStyle.Foreground.BrightBlack + "# $comment" + $PSStyle.Reset)
-
-        # Optimize the favorites list
-        Optimize-PSFavorites
     }
 }

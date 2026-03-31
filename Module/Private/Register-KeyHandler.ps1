@@ -16,6 +16,12 @@ function Register-KeyHandler(
         $cursor = ""
         [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor);
 
+        # If the current command is empty, show a warning and return
+        if ($line -eq "") {
+            Write-Host ($PSStyle.Foreground.Yellow + "⚠️ No command to add to favorites" + $PSStyle.Reset)
+            return
+        }
+        
         # Add the current command to the favorites list
         $line | Add-PSFavorite
 

@@ -18,6 +18,7 @@
 function Add-PSFavorite(
     # The command to add to the favorites list.
     [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+    [ValidateNotNullOrWhiteSpace()]
     [string] $Command,
 
     # The path to the favorites list file.

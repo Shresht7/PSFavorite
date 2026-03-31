@@ -251,6 +251,40 @@ namespace PSFavorite
             return string.Empty;
         }
 
+        /// <summary>
+        /// Parse a favorite line to extract command and tooltip.
+        /// </summary>
+        /// <param name="line">The line from the favorite's file</param>
+        /// <returns>A tuple containing the command and tooltip</returns>
+        /// <remarks>
+        /// Uses PowerShell AST parser to properly extract comments, handling '#' inside strings.
+        /// </remarks>
+        public static (string Command, string Tooltip) ParseFavoriteLine(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return (string.Empty, string.Empty);
+            }
+
+            string tooltip = GetTooltip(line);
+            string command = string.Empty;
+
+            if (string.IsNullOrEmpty(tooltip))
+            {
+                command = line.Trim();
+            }
+            else
+            {
+                int commentIndex = line.IndexOf('#');
+                if (commentIndex > 0)
+                {
+                    command = line[..commentIndex].Trim();
+                }
+            }
+
+            return (command, tooltip);
+        }
+
         #endregion
 
         #region "interface methods for processing feedback"

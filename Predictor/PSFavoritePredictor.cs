@@ -33,6 +33,9 @@ namespace PSFavorite
         /// </summary>
         public string Description => "A predictor that uses a list of favorite commands to provide suggestions.";
 
+        /// A fixed GUID to identify the predictor. This should be unique to avoid conflicts with other predictors.
+        internal const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
+
         #region "Favorites"
 
         /// <summary>
@@ -261,6 +264,22 @@ namespace PSFavorite
         public void OnCommandLineExecuted(PredictionClient client, string commandLine, bool success) { }
 
         #endregion
+
+        /// <summary>
+        /// Explicitly unregister the predictor from the PSReadLine subsystem.
+        /// Safe to call multiple times; silently ignores if not currently registered.
+        /// </summary>
+        public static void Unregister()
+        {
+            try
+            {
+                SubsystemManager.UnregisterSubsystem(SubsystemKind.CommandPredictor, new Guid(Identifier));
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("not registered"))
+            {
+                // Predictor was already unregistered or never registered; no-op.
+            }
+        }
     }
 
     /// <summary>
@@ -268,26 +287,20 @@ namespace PSFavorite
     /// </summary>
     public class Init : IModuleAssemblyInitializer, IModuleAssemblyCleanup
     {
-        private const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
-
         /// <summary>
         /// Gets called when assembly is loaded.
         /// </summary>
         public void OnImport()
         {
-            var predictor = new PSFavoritePredictor(Identifier);
+            var predictor = new PSFavoritePredictor(PSFavoritePredictor.Identifier);
             try
             {
                 SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException ex) when (ex.Message.Contains("already registered"))
             {
                 // The predictor may already be registered (e.g., repeated module import in the same process).
                 // Treat duplicate registration as a no-op to make initialization idempotent.
-                if (!ex.Message.Contains("already registered"))
-                {
-                    throw;
-                }
             }
         }
 
@@ -296,7 +309,7 @@ namespace PSFavorite
         /// </summary>
         public void OnRemove(PSModuleInfo psModuleInfo)
         {
-            SubsystemManager.UnregisterSubsystem(SubsystemKind.CommandPredictor, new Guid(Identifier));
+            PSFavoritePredictor.Unregister();
         }
     }
 }

@@ -18,7 +18,8 @@ Describe "Predictor initialization on first import" {
                 Test-Path $favoritesFile | Should -BeTrue
             }
             finally {
-                # Cleanup: remove module and temp folder
+                # Cleanup: unregister predictor, remove module and temp folder
+                Unregister-PSFavoritePredictor -ErrorAction SilentlyContinue
                 Remove-Module PSFavorite -ErrorAction SilentlyContinue
                 Remove-Item -Path $testRoot -Recurse -Force -ErrorAction SilentlyContinue
             }

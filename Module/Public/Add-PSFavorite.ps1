@@ -22,6 +22,7 @@ function Add-PSFavorite(
     [string] $Command,
 
     # The path to the favorites list file.
+    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
     [string] $FavoritesPath = $Script:FavoritesPath
 ) {
     $Command | Out-File -FilePath $FavoritesPath -Append

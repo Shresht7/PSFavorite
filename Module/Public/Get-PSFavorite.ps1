@@ -13,6 +13,7 @@
 #>
 function Get-PSFavorite(
     # The path to the favorites list file.
+    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
     [string] $FavoritesPath = $Script:FavoritesPath
 ) {
     # Get the favorites from the file

@@ -19,6 +19,9 @@ function Initialize-Configuration(
     # Name of the parent folder
     [string] $ModuleName = "PSFavorite",
 
+    # Name of the configuration file
+    [string] $FavoritesFile = "Favorites.txt",
+
     # Path to the configuration file
     [string] $FavoritesPath
 ) {
@@ -31,9 +34,7 @@ function Initialize-Configuration(
     else {
         # Create the PSFavorite directory if it doesn't already exist
         $local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "$HOME/.local/share" }
-        $folder = Join-Path $local $ModuleName    
-        # Path to the Favorites file
-        $Script:FavoritesPath = Join-Path $folder "Favorites.txt"    
+        $Script:FavoritesPath = Join-Path $local $ModuleName $FavoritesFile    
     }
 
     # Create the directory if it doesn't exist

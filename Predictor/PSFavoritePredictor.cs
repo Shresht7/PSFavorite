@@ -80,10 +80,9 @@ namespace PSFavorite
                 // Check if the favorites file exists. If it does, read all lines and update the _favorites array.
                 if (File.Exists(_FavoritesFilePath))
                 {
-                    var lines = File.ReadAllLines(_FavoritesFilePath);
                     lock (_favoritesLock)
                     {
-                        _favorites = lines;
+                        _favorites = File.ReadAllLines(_FavoritesFilePath);
                     }
                 }
                 // ...otherwise, if the file does not exist, set _favorites to an empty array.

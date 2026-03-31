@@ -56,7 +56,7 @@ namespace PSFavorite
         /// A cached list of favorite commands.
         /// Can be updated by calling LoadFavoritesIfExists, which is triggered during initialization.
         /// </summary>
-        private static string[] _favorites = Array.Empty<string>();
+        private static string[] _favorites = [];
 
         /// <summary>
         /// An object used for locking access to the favorites array to ensure thread safety.
@@ -109,7 +109,7 @@ namespace PSFavorite
                 {
                     lock (_favoritesLock)
                     {
-                        _favorites = Array.Empty<string>();
+                        _favorites = [];
                     }
                 }
             }
@@ -119,7 +119,7 @@ namespace PSFavorite
             {
                 lock (_favoritesLock)
                 {
-                    _favorites = Array.Empty<string>();
+                    _favorites = [];
                 }
             }
         }

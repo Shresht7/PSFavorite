@@ -5,13 +5,13 @@
     Get the PSFavorites list. This will return the list of commands in the favorites list.
     The favorites list is stored in the `AppData\Local\PSFavorite\Favorites.txt` file.
 .EXAMPLE
-    Get-PSFavorites
+    Get-PSFavorite
     Get the list of commands in the favorites list.
 .EXAMPLE
-    Get-PSFavorites | Out-GridView
+    Get-PSFavorite | Out-GridView
     Get the list of commands in the favorites list and display it in a GridView.
 #>
-function Get-PSFavorites(
+function Get-PSFavorite(
     # The path to the favorites list file.
     [string] $FavoritesPath = $Script:FavoritesPath
 ) {

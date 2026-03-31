@@ -1,4 +1,4 @@
-Describe "Get-PSFavorites" {
+Describe "Get-PSFavorite" {
 
     # Before all, import the module and initialize the favorites list
     BeforeAll {
@@ -15,7 +15,7 @@ Describe "Get-PSFavorites" {
 
     Context "When getting the favorites list" {
         It "Should return the list of commands in the favorites list" {
-            $Favorites = Get-PSFavorites -FavoritesPath $FavoritesPath
+            $Favorites = Get-PSFavorite -FavoritesPath $FavoritesPath
             $Favorites | Should -HaveCount 2
             $Favorites[0].Command | Should -Be "Get-Date"
             $Favorites[0].Description | Should -Be "Get-Date"

@@ -11,8 +11,16 @@ namespace PSFavorite
 {
     public class PSFavoritePredictor : ICommandPredictor
     {
+        /// <summary>
+        /// The unique identifier for this predictor instance.
+        /// This is set through the constructor and used for registration with the subsystem manager.
+        /// </summary>
         private readonly Guid _guid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PSFavoritePredictor"/> class with a specified GUID.
+        /// </summary>
+        /// <param name="guid">The GUID to associate with this predictor instance.</param>
         internal PSFavoritePredictor(string guid)
         {
             _guid = new Guid(guid);
@@ -33,7 +41,10 @@ namespace PSFavorite
         /// </summary>
         public string Description => "A predictor that uses a list of favorite commands to provide suggestions.";
 
+        /// <summary>
         /// A fixed GUID to identify the predictor. This should be unique to avoid conflicts with other predictors.
+        /// This is used for registration and unregistration of the predictor with the subsystem manager.
+        /// </summary>
         internal const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
 
         #region "Favorites"

@@ -293,6 +293,8 @@ namespace PSFavorite
 
         #endregion
 
+        #region "Unregister"
+
         /// <summary>
         /// Explicitly unregister the predictor from the PSReadLine subsystem.
         /// Safe to call multiple times; silently ignores if not currently registered.
@@ -308,7 +310,11 @@ namespace PSFavorite
                 // Predictor was already unregistered or never registered; no-op.
             }
         }
+
+        #endregion
     }
+
+    #region "Init"
 
     /// <summary>
     /// Register the predictor on module loading and unregister it on module un-loading.
@@ -340,4 +346,7 @@ namespace PSFavorite
             PSFavoritePredictor.Unregister();
         }
     }
+
+    #endregion
+
 }

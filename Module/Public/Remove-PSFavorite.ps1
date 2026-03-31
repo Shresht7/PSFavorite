@@ -49,6 +49,7 @@ function Remove-PSFavorite {
     if ($PSCmdlet.ShouldProcess("Save changes to the favorites list?")) {
         $Favorites | Out-File -FilePath $FavoritesPath
         Write-Verbose "Changes saved to the favorites list."
+        [PSFavorite.PSFavoritePredictor]::Reload()
     }
 
 }

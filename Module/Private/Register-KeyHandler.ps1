@@ -21,7 +21,15 @@ function Register-KeyHandler(
             Write-Host ($PSStyle.Foreground.Yellow + "⚠️ No command to add to favorites" + $PSStyle.Reset)
             return
         }
-        
+
+        # Check for duplicate
+        $command = ($line -split "#")[0].Trim()
+        $existing = Get-PSFavorites | Where-Object { $_.Command -eq $command }
+        if ($existing) {
+            Write-Host ($PSStyle.Foreground.Yellow + "Already in Favorites:" + $PSStyle.Reset + " $command")
+            return
+        }
+
         # Add the current command to the favorites list
         $line | Add-PSFavorite
 

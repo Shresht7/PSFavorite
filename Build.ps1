@@ -44,12 +44,12 @@ if ($Clean) {
 
 # Build the Predictor DLL
 Write-Host "Building project ($Configuration)..."
-dotnet build $Project -c $Configuration -f $TargetFramework
-
-# Fail fast: If dotnet build failed, do not attempt to copy files
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Build failed. Please check the output above."
-    exit $LASTEXITCODE
+try {
+    dotnet build $Project -c $Configuration -f $TargetFramework
+}
+catch {
+    Write-Error "Build failed: $($_.Exception.Message)"
+    exit 1
 }
 
 # Items to copy to the Module directory

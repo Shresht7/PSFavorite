@@ -1,4 +1,9 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Collections.Generic;
+using System.Management.Automation;
 using System.Management.Automation.Subsystem;
 using System.Management.Automation.Subsystem.Prediction;
 
@@ -6,8 +11,16 @@ namespace PSFavorite
 {
     public class PSFavoritePredictor : ICommandPredictor
     {
+        /// <summary>
+        /// The unique identifier for this predictor instance.
+        /// This is set through the constructor and used for registration with the subsystem manager.
+        /// </summary>
         private readonly Guid _guid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PSFavoritePredictor"/> class with a specified GUID.
+        /// </summary>
+        /// <param name="guid">The GUID to associate with this predictor instance.</param>
         internal PSFavoritePredictor(string guid)
         {
             _guid = new Guid(guid);
@@ -29,14 +42,86 @@ namespace PSFavorite
         public string Description => "A predictor that uses a list of favorite commands to provide suggestions.";
 
         /// <summary>
-        /// The file path of the favorite commands file.
+        /// A fixed GUID to identify the predictor. This should be unique to avoid conflicts with other predictors.
+        /// This is used for registration and unregistration of the predictor with the subsystem manager.
         /// </summary>
-        private static readonly string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PSFavorite", "Favorites.txt");
+        internal const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
+
+        #region "Favorites"
 
         /// <summary>
-        /// A list of favorite commands.
+        /// The file path of the favorite commands file.
+        /// For Windows, the default path is "%LocalAppData%\PSFavorite\Favorites.txt" and for Linux/macOS, the default path is "$HOME/.local/share/PSFavorite/Favorites.txt".
+        /// The file is expected to contain one favorite command per line, and an optional description after a '#' character.
         /// </summary>
-        private readonly string[] favorites = File.ReadAllLines(_FavoritesFilePath);
+        private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PSFavorite", "Favorites.txt");
+
+        /// <summary>
+        /// A cached list of favorite commands.
+        /// Can be updated by calling LoadFavoritesIfExists, which is triggered during initialization.
+        /// </summary>
+        private static string[] _favorites = Array.Empty<string>();
+
+        /// <summary>
+        /// An object used for locking access to the favorites array to ensure thread safety.
+        /// This is necessary because the predictor may be called from multiple threads concurrently, and we want to avoid race conditions
+        /// when loading or accessing the favorites.
+        /// </summary>
+        private static readonly object _favoritesLock = new object();
+
+        /// <summary>
+        /// Initialize the predictor with an explicit favorites path.
+        /// Safe to call from PowerShell after the module's configuration is resolved.
+        /// </summary>
+        /// <param name="favoritesPath">Full path to the favorites file.</param>
+        public static void Initialize(string favoritesPath)
+        {
+            if (!string.IsNullOrWhiteSpace(favoritesPath))
+            {
+                _FavoritesFilePath = favoritesPath;
+            }
+
+            LoadFavoritesIfExists();
+        }
+
+        /// <summary>
+        /// Load the favorites from the file if it exists. If any error occurs, set favorites to an empty array.
+        /// </summary>
+        private static void LoadFavoritesIfExists()
+        {
+            try
+            {
+                // Check if the favorites file exists. If it does, read all lines and update the _favorites array.
+                if (File.Exists(_FavoritesFilePath))
+                {
+                    lock (_favoritesLock)
+                    {
+                        _favorites = File.ReadAllLines(_FavoritesFilePath);
+                    }
+                }
+                // ...otherwise, if the file does not exist, set _favorites to an empty array.
+                else
+                {
+                    lock (_favoritesLock)
+                    {
+                        _favorites = Array.Empty<string>();
+                    }
+                }
+            }
+            // If any exception occurs during file access (e.g., file is locked, permission issues, etc.),
+            // catch the exception and set _favorites to an empty array to avoid crashing the predictor.
+            catch
+            {
+                lock (_favoritesLock)
+                {
+                    _favorites = Array.Empty<string>();
+                }
+            }
+        }
+
+        #endregion
+
+        #region "Suggestions"
 
         /// <summary>
         /// Get the predictive suggestions. It indicates the start of a suggestion rendering session.
@@ -53,9 +138,19 @@ namespace PSFavorite
             {
                 return default;
             }
+            
+            string[] favoritesSnapshot;
+            lock (_favoritesLock)
+            {
+                favoritesSnapshot = _favorites;
+            }
 
-            // Generate the list of predictive suggestions.
-            List<PredictiveSuggestion> suggestions = favorites
+            if (favoritesSnapshot is null || favoritesSnapshot.Length == 0)
+            {
+                return default;
+            }
+
+            List<PredictiveSuggestion> suggestions = favoritesSnapshot
                 .Select(line => (Line: line, Score: DetermineScore(input, line)))               // Determine the score for each line.
                 .Where(tuple => tuple.Score >= ScoreThreshold)                                  // Filter out the lines below the score threshold.
                 .OrderByDescending(tuple => tuple.Score)                                        // Order the list by the score in descending order.
@@ -130,6 +225,8 @@ namespace PSFavorite
             }
         }
 
+        #endregion
+
         #region "interface methods for processing feedback"
 
         /// <summary>
@@ -177,7 +274,23 @@ namespace PSFavorite
         /// <param name="success">Shows whether the execution was successful.</param>
         public void OnCommandLineExecuted(PredictionClient client, string commandLine, bool success) { }
 
-        #endregion;
+        #endregion
+
+        /// <summary>
+        /// Explicitly unregister the predictor from the PSReadLine subsystem.
+        /// Safe to call multiple times; silently ignores if not currently registered.
+        /// </summary>
+        public static void Unregister()
+        {
+            try
+            {
+                SubsystemManager.UnregisterSubsystem(SubsystemKind.CommandPredictor, new Guid(Identifier));
+            }
+            catch (InvalidOperationException)
+            {
+                // Predictor was already unregistered or never registered; no-op.
+            }
+        }
     }
 
     /// <summary>
@@ -185,15 +298,21 @@ namespace PSFavorite
     /// </summary>
     public class Init : IModuleAssemblyInitializer, IModuleAssemblyCleanup
     {
-        private const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
-
         /// <summary>
         /// Gets called when assembly is loaded.
         /// </summary>
         public void OnImport()
         {
-            var predictor = new PSFavoritePredictor(Identifier);
-            SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
+            var predictor = new PSFavoritePredictor(PSFavoritePredictor.Identifier);
+            try
+            {
+                SubsystemManager.RegisterSubsystem(SubsystemKind.CommandPredictor, predictor);
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("already registered"))
+            {
+                // The predictor may already be registered (e.g., repeated module import in the same process).
+                // Treat duplicate registration as a no-op to make initialization idempotent.
+            }
         }
 
         /// <summary>
@@ -201,7 +320,7 @@ namespace PSFavorite
         /// </summary>
         public void OnRemove(PSModuleInfo psModuleInfo)
         {
-            SubsystemManager.UnregisterSubsystem(SubsystemKind.CommandPredictor, new Guid(Identifier));
+            PSFavoritePredictor.Unregister();
         }
     }
 }

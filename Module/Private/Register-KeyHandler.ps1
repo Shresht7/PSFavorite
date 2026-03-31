@@ -22,8 +22,11 @@ function Register-KeyHandler(
             return
         }
 
+        # Use C# GetTooltip for proper command/comment extraction
+        $comment = [PSFavorite.PSFavoritePredictor]::GetTooltip($line)
+        $command = $line.Substring(0, $line.Length - $comment.Length).TrimEnd().TrimEnd('#').Trim()
+
         # Check for duplicate
-        $command = ($line -split "#")[0].Trim()
         $existing = Get-PSFavorites | Where-Object { $_.Command -eq $command }
         if ($existing) {
             Write-Host ($PSStyle.Foreground.Yellow + "Already in Favorites:" + $PSStyle.Reset + " $command")
@@ -37,11 +40,10 @@ function Register-KeyHandler(
         [Microsoft.PowerShell.PSConsoleReadLine]::DeleteLine()
 
         # Accept the empty line and move the prompt forward
-        [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()    
+        [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 
-        # Show a notification that the command was added to the favorites list
-        $Command, $Comment = $line -split "#"
-        Write-Host ($PSStyle.Foreground.Yellow + "⭐ Marked as Favorite:" + $PSStyle.Reset + " $Command " + $PSStyle.Foreground.BrightBlack + "# $Comment" + $PSStyle.Reset)
+        # Show notification
+        Write-Host ($PSStyle.Foreground.Yellow + "⭐ Marked as Favorite:" + $PSStyle.Reset + " $command " + $PSStyle.Foreground.BrightBlack + "# $comment" + $PSStyle.Reset)
 
         # Optimize the favorites list
         Optimize-PSFavorites

@@ -22,7 +22,7 @@ function Add-PSFavorite {
         # The command to add to the favorites list.
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrWhiteSpace()]
-        [Alias("Cmd", "Name", "FullName")]
+        [Alias("Cmd", "Name", "FullName", "InputObject", "Input")]
         [string[]] $Command,
 
         # The path to the favorites list file.

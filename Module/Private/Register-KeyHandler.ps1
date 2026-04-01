@@ -23,7 +23,10 @@ function Register-KeyHandler(
         }
 
         # Use C# ParseFavoriteLine for proper command/comment extraction
-        $command, $comment = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($line)
+        # Since PowerShell does not support deconstructing a ValueTuple, we have to access Item1 and Item2 explicitly.
+        $tuple = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($line)
+        $command = $tuple.Item1
+        $comment = $tuple.Item2
 
         # Check for duplicate using simple file search
         $favoritesPath = $Script:FavoritesPath

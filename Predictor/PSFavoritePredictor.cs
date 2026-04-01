@@ -232,9 +232,6 @@ namespace PSFavorite
         /// </summary>
         /// <param name="line">The line from the favorite's file</param>
         /// <returns>The tooltip for the suggestion</returns>
-        /// <remarks>
-        /// Uses PowerShell AST parser to properly extract comments, handling '#' inside strings.
-        /// </remarks>
         /// <example>
         /// If the line is "Get-Process # Get the list of processes", the tooltip is "Get the list of processes".
         /// </example>
@@ -245,22 +242,27 @@ namespace PSFavorite
                 return string.Empty;
             }
 
-            _ = Parser.ParseInput(line, out Token[] tokens, out _);
+            var (_, tooltip) = ParseFavoriteLine(line);
+            return tooltip;
+        }
 
-            if (tokens == null)
+        /// <summary>
+        /// Get the command for the suggestion, which is the part before the '#' character.
+        /// </summary>
+        /// <param name="line">The line from the favorite's file</param>
+        /// <returns>The command for the suggestion</returns>
+        /// <example>
+        /// If the line is "Get-Process # Get the list of processes", the command is "Get-Process".
+        /// </example>
+        public static string GetCommand(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
             {
                 return string.Empty;
             }
 
-            foreach (var token in tokens)
-            {
-                if (token.Kind == TokenKind.Comment)
-                {
-                    return token.Text.TrimStart('#').Trim();
-                }
-            }
-
-            return string.Empty;
+            var (command, _) = ParseFavoriteLine(line);
+            return command;
         }
 
         /// <summary>

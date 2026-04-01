@@ -278,21 +278,23 @@ namespace PSFavorite
                 return (string.Empty, string.Empty);
             }
 
-            string tooltip = GetTooltip(line);
-            string command = string.Empty;
+            _ = Parser.ParseInput(line, out Token[] tokens, out _);
+            if (tokens == null)
+            {
+                return (line.Trim(), string.Empty);
+            }
 
-            if (string.IsNullOrEmpty(tooltip))
+            Token? commentToken = tokens.FirstOrDefault(token => token.Kind == TokenKind.Comment);
+            if (commentToken == null)
             {
-                command = line.Trim();
+                return (line.Trim(), string.Empty);
             }
-            else
-            {
-                int commentIndex = line.IndexOf('#');
-                if (commentIndex > 0)
-                {
-                    command = line[..commentIndex].Trim();
-                }
-            }
+
+            string tooltip = commentToken.Text.TrimStart('#').Trim();
+            int commentStart = commentToken.Extent.StartOffset;
+            string command = commentStart > 0
+                ? line[..commentStart].Trim()
+                : string.Empty;
 
             return (command, tooltip);
         }

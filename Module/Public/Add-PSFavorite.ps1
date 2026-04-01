@@ -15,17 +15,20 @@
     The PSFavorites module ships with a keybinding (`ctrl+shift+*`) to mark
     the current command to the favorites list. So you don't have to use this cmdlet.
 #>
-function Add-PSFavorite(
-    # The command to add to the favorites list.
-    [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-    [ValidateNotNullOrWhiteSpace()]
-    [Alias("Cmd", "Name", "FullName")]
-    [string[]] $Command,
+function Add-PSFavorite {
 
-    # The path to the favorites list file.
-    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-    [string] $FavoritesPath = $Script:FavoritesPath
-) {
+    [CmdletBinding()]
+    param (
+        # The command to add to the favorites list.
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrWhiteSpace()]
+        [Alias("Cmd", "Name", "FullName")]
+        [string[]] $Command,
+
+        # The path to the favorites list file.
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [string] $FavoritesPath = $Script:FavoritesPath
+    )
 
     begin {
         $ToWrite = @()

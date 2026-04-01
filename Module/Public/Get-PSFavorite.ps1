@@ -10,6 +10,18 @@
 .EXAMPLE
     Get-PSFavorite | Out-GridView
     Get the list of commands in the favorites list and display it in a GridView.
+.EXAMPLE
+    Get-PSFavorite -Property Command
+    Get only the commands in the favorites list.
+.EXAMPLE
+    Get-PSFavorite -Filter "git"
+    Get the commands in the favorites list that contain the string "git" in either the command or the description.
+.EXAMPLE
+    Get-PSFavorite -Property Description -Filter "git"
+    Get only the descriptions in the favorites list that contain the string "git".
+.NOTES
+    The output of this cmdlet can be used with the `Remove-PSFavorite` cmdlet to remove items from the favorites list.
+    For example: `Get-PSFavorite -Filter "git" | Remove-PSFavorite` will remove all favorites that contain the string "git".
 #>
 function Get-PSFavorite {
 

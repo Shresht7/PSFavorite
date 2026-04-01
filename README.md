@@ -91,6 +91,22 @@ Import-Module ./Module/PSFavorite.psd1 -Force
 Invoke-Pester -Path ./Module/Tests
 ```
 
+The C# predictor includes a small xUnit test project. To run the .NET tests (after restore) run:
+
+```pwsh
+# Build the predictor and copy the DLL
+./Build.ps1
+
+# Run all .NET tests in the solution
+dotnet test PSFavorite.sln -c Debug
+
+# or simply
+dotnet test
+
+# Or run only the predictor test project
+dotnet test Predictor.Tests/PSFavoritePredictor.Tests.csproj -c Debug
+```
+
 ### 🚢 Publishing
 
 The module is automatically published to the PowerShell Gallery when a new **Release** is created on GitHub. 

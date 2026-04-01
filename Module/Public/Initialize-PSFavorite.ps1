@@ -16,7 +16,8 @@
     Initializes the PSFavorite module using the default configuration and keybindings.
 .EXAMPLE
     Initialize-PSFavorite -FavoritesPath "C:\PSFavorite\Config.txt" -Key "Ctrl+Shift+F"
-    Initializes the PSFavorite module by creating a configuration file at "C:\PSFavorite\Config.txt" and registers the key combination "Ctrl+Shift+F" to add a favorite.
+    Initializes the PSFavorite module by creating a configuration file at "C:\PSFavorite\Config.txt"
+    and registers the key combination "Ctrl+Shift+F" to add a favorite.
 #>
 function Initialize-PSFavorite(
     # Path to the configuration file
@@ -32,6 +33,7 @@ function Initialize-PSFavorite(
 
     # We use splatting here because the FavoritesPath parameter is optional
     # `Initialize-Configuration` will use the default value if it's not specified.
+    # Also the configuration may grow in the future.
 
     # Initialize the configuration file
     Initialize-Configuration @Params

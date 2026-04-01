@@ -21,9 +21,11 @@
 #>
 function Initialize-PSFavorite(
     # Path to the configuration file
+    [Alias("ConfigPath", "ConfigFile", "FavoritesFile", "Path", "Name", "FullName", "FullPath")]
     [string] $FavoritesPath,
 
     # Key combination to add a favorite
+    [Alias("Keybind", "Keybinding", "KeyCombo", "KeyCombination")]
     [string] $Key = "Ctrl+Shift+*"
 ) {
     # Parameters for the Initialize-Configuration function

@@ -75,7 +75,7 @@
         "Add-PSFavorite",
         "Get-PSFavorite",
         "Initialize-PSFavorite",
-        "Optimize-PSFavorites",
+        "Optimize-PSFavorite",
         "Remove-PSFavorite",
         "Unregister-PSFavoritePredictor"
     )

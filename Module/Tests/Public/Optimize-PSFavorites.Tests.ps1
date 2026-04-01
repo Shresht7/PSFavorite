@@ -1,4 +1,4 @@
-Describe "Optimize-PSFavorites" {
+Describe "Optimize-PSFavorite" {
 
     # Before all, import the module and initialize the favorites list
     BeforeAll {
@@ -16,13 +16,13 @@ Describe "Optimize-PSFavorites" {
 
     Context "When optimizing the favorites list" {
         It "Should sort the list" {
-            Optimize-PSFavorites -FavoritesPath $FavoritesPath
+            Optimize-PSFavorite -FavoritesPath $FavoritesPath
             $Favorites = Get-Content -Path $FavoritesPath
             $Favorites | Should -Be @("Get-Date", "Get-Process")
         }
 
         It "Should remove duplicates from the list" {
-            Optimize-PSFavorites -FavoritesPath $FavoritesPath
+            Optimize-PSFavorite -FavoritesPath $FavoritesPath
             $Favorites = Get-Content -Path $FavoritesPath
             $Favorites | Should -Be @("Get-Date", "Get-Process")
         }

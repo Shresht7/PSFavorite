@@ -43,10 +43,9 @@ Get-PSFavoritePath
 Favorites are stored in a simple text format, one command per line along with an optional comment description.
 
 ```pwsh
-# Favorites.txt file example:
-Get-ChildItem -Path C:\ -Recurse    # List all files in C:\ and subdirectories
-Get-Process | Where-Object CPU -gt 100 # Get processes consuming more than 100 CPU units
-git reset --hard HEAD~1    # Reset the current Git branch to the previous commit, discarding changes
+Get-ChildItem -Filter *.md    # List all Markdown files in the current directory
+Get-Process | Where-Object CPU -gt 25 # Get processes consuming more than 25 CPU units
+git reset --hard HEAD~1    # Undo the last Git commit, discarding changes
 ```
 
 ### 📜 Cmdlets

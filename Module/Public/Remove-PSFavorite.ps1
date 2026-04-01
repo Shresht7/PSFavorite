@@ -11,8 +11,8 @@
     "Get-Date" | Remove-PSFavorite
     Remove the "Get-Date" command from the favorites list.
 .EXAMPLE
-    Get-PSFavorite | Invoke-Fzf | Remove-PSFavorite
-    Use fuzzy-finder to interactively select a favorite to remove
+    Get-PSFavorite | Invoke-Fzf -Multi | Remove-PSFavorite
+    Use fuzzy-finder to interactively select one or more favorites to remove
 #>
 function Remove-PSFavorite {
 
@@ -21,6 +21,7 @@ function Remove-PSFavorite {
         # The command(s) to remove from the favorites list
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
+        [Alias("Cmd", "Name", "FullName", "InputObject", "Input")]
         [PSObject[]] $Command,
 
         # The path to the favorites list file
@@ -46,9 +47,9 @@ function Remove-PSFavorite {
 
     # Write the filtered Favorites out to the Favorites.txt file
     if ($PSCmdlet.ShouldProcess("Save changes to the favorites list?")) {
-        $Favorites | Out-File -FilePath $FavoritesPath
+        $Favorites | Out-File -FilePath $FavoritesPath -Encoding UTF8 -Force 
+
         Write-Verbose "Changes saved to the favorites list."
         [PSFavorite.PSFavoritePredictor]::Reload()
     }
-
 }

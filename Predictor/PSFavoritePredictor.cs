@@ -7,6 +7,9 @@ namespace PSFavorite
 {
     public class PSFavoritePredictor : ICommandPredictor
     {
+
+        #region "Predictor Metadata"
+
         /// <summary>
         /// The unique identifier for this predictor instance.
         /// This is set through the constructor and used for registration with the subsystem manager.
@@ -43,18 +46,20 @@ namespace PSFavorite
         /// </summary>
         internal const string Identifier = "843b51d0-55c8-4c1a-8116-f0728d419306";
 
+        #endregion
+
         #region "Favorites"
 
         /// <summary>
         /// The file path of the favorite commands file.
-        /// For Windows, the default path is "%LocalAppData%\PSFavorite\Favorites.txt" and for Linux/macOS, the default path is "$HOME/.local/share/PSFavorite/Favorites.txt".
-        /// The file is expected to contain one favorite command per line, and an optional description after a '#' character.
+        /// For Windows, the default path is `%LocalAppData%\PSFavorite\Favorites.txt` and for Linux/macOS, the default path is `$HOME/.local/share/PSFavorite/Favorites.txt`.
+        /// The file is expected to contain one favorite command per line, and an optional comment description after a '#' character.
         /// </summary>
         private static string _FavoritesFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PSFavorite", "Favorites.txt");
 
         /// <summary>
         /// A cached list of favorite commands.
-        /// Can be updated by calling LoadFavoritesIfExists, which is triggered during initialization.
+        /// Can be updated by calling `LoadFavoritesIfExists` or `Reload`, which is triggered during initialization.
         /// </summary>
         private static string[] _favorites = [];
 
@@ -81,8 +86,8 @@ namespace PSFavorite
         }
 
         /// <summary>
-        /// Reload the favorites from the file. Call this after modifying the favorites file
-        /// to immediately reflect changes in the predictor.
+        /// Reload the favorites from the file. 
+        /// This can be called after modifying the favorites file to immediately reflect changes in the predictor.
         /// </summary>
         public static void Reload()
         {
@@ -144,19 +149,21 @@ namespace PSFavorite
                 return default;
             }
 
+            // Take a snapshot of the favorites array to avoid locking it for the entire suggestion generation process.
             string[] favoritesSnapshot;
             lock (_favoritesLock)
             {
                 favoritesSnapshot = _favorites;
             }
 
+            // If there are no favorites, return default.
             if (favoritesSnapshot is null || favoritesSnapshot.Length == 0)
             {
                 return default;
             }
 
+            // Generate suggestions based on the input and the favorites.
             var suggestions = new List<(int Score, PredictiveSuggestion Suggestion)>();
-
             foreach (var line in favoritesSnapshot)
             {
                 int score = DetermineScore(input, line);
@@ -166,6 +173,7 @@ namespace PSFavorite
                 }
             }
 
+            // Sort the suggestions by score in descending order
             var result = suggestions
                 .OrderByDescending(t => t.Score)
                 .Select(t => t.Suggestion)
@@ -214,6 +222,10 @@ namespace PSFavorite
 
             return score;
         }
+
+        #endregion
+
+        #region "Parser"
 
         /// <summary>
         /// Get the tooltip for the suggestion.

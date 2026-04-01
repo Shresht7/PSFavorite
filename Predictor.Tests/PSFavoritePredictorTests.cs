@@ -91,6 +91,40 @@ public class PSFavoritePredictorTests
 
     #region ParseFavoriteLine
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void ParseFavoriteLine_ReturnsEmpty_ForBlankInput(string? line)
+    {
+        var (command, tooltip) = Predictor.ParseFavoriteLine(line!);
+
+        Assert.Equal(string.Empty, command);
+        Assert.Equal(string.Empty, tooltip);
+    }
+
+    [Fact]
+    public void ParseFavoriteLine_CommentOnlyLine_ReturnsEmptyCommandAndTooltip()
+    {
+        string line = "# only comment";
+
+        (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
+
+        Assert.Equal(string.Empty, command);
+        Assert.Equal("only comment", tooltip);
+    }
+
+    [Fact]
+    public void ParseFavoriteLine_ReturnsTrimmedLine_WhenNoCommentExists()
+    {
+        string line = "  Get-Date  ";
+
+        (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
+
+        Assert.Equal("Get-Date", command);
+        Assert.Equal(string.Empty, tooltip);
+    }
+
     [Fact]
     public void ParseFavoriteLine_ReturnsCommandAndTooltip()
     {
@@ -114,88 +148,46 @@ public class PSFavoritePredictorTests
     }
 
     [Fact]
-    public void ParseFavoriteLine_ReturnsTrimmedLine_WhenNoCommentExists()
+    public void ParseFavoriteLine_HandlesQuotedHashVariants()
     {
-        string line = "  Get-Date  ";
+        string line = "Write-Output \"a#b\"; Write-Output \"c\" # trailing";
 
         (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
 
-        Assert.Equal("Get-Date", command);
-        Assert.Equal(string.Empty, tooltip);
-    }
-
-    #endregion
-
-    #region Tooltips
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void GetTooltip_ReturnsEmpty_ForBlankInput(string? line)
-    {
-        string tooltip = Predictor.GetTooltip(line!);
-
-        Assert.Equal(string.Empty, tooltip);
+        Assert.Equal("Write-Output \"a#b\"; Write-Output \"c\"", command);
+        Assert.Equal("trailing", tooltip);
     }
 
     [Fact]
-    public void GetTooltip_ExtractsTrailingComment()
-    {
-        string line = "Get-Process # List running processes";
-
-        string tooltip = Predictor.GetTooltip(line);
-
-        Assert.Equal("List running processes", tooltip);
-    }
-
-    [Fact]
-    public void GetTooltip_IgnoresHashInsideStringLiteral()
-    {
-        string line = "Write-Host \"#tag\" # Display tag";
-
-        string tooltip = Predictor.GetTooltip(line);
-
-        Assert.Equal("Display tag", tooltip);
-    }
-
-    [Fact]
-    public void GetTooltip_ReturnsEmpty_WhenNoCommentExists()
-    {
-        string line = "Get-Date";
-
-        string tooltip = Predictor.GetTooltip(line);
-
-        Assert.Equal(string.Empty, tooltip);
-    }
-
-    [Fact]
-    public void GetTooltip_TrimsMultipleHashes()
+    public void ParseFavoriteLine_MultipleHashes_TrimsHashes()
     {
         string line = "Cmd ## multiple hashes";
 
-        string tooltip = Predictor.GetTooltip(line);
+        (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
 
+        Assert.Equal("Cmd", command);
         Assert.Equal("multiple hashes", tooltip);
     }
 
     [Fact]
-    public void GetTooltip_HandlesCommentOnlyLine()
+    public void ParseFavoriteLine_TrimsWhitespaceAroundCommand()
     {
-        string line = "# only comment";
+        string line = "   Cmd   #  tip  ";
 
-        string tooltip = Predictor.GetTooltip(line);
+        (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
 
-        Assert.Equal("only comment", tooltip);
+        Assert.Equal("Cmd", command);
+        Assert.Equal("tip", tooltip);
     }
 
     [Fact]
-    public void GetTooltip_TrimsWhitespaceAroundComment()
+    public void ParseFavoriteLine_TrimsWhitespaceAroundComment()
     {
         string line = "Cmd    #   spaced   ";
 
-        string tooltip = Predictor.GetTooltip(line);
+        (string command, string tooltip) = Predictor.ParseFavoriteLine(line);
 
+        Assert.Equal("Cmd", command);
         Assert.Equal("spaced", tooltip);
     }
 

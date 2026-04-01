@@ -8,7 +8,7 @@ namespace PSFavorite
     public class PSFavoritePredictor : ICommandPredictor
     {
 
-        #region "Predictor Metadata"
+        #region Predictor Metadata
 
         /// <summary>
         /// The unique identifier for this predictor instance.
@@ -48,7 +48,7 @@ namespace PSFavorite
 
         #endregion
 
-        #region "Favorites"
+        #region Favorites
 
         /// <summary>
         /// The file path of the favorite commands file.
@@ -131,7 +131,7 @@ namespace PSFavorite
 
         #endregion
 
-        #region "Suggestions"
+        #region Suggestions
 
         /// <summary>
         /// Get the predictive suggestions. It indicates the start of a suggestion rendering session.
@@ -225,7 +225,7 @@ namespace PSFavorite
 
         #endregion
 
-        #region "Parser"
+        #region Parser
 
         /// <summary>
         /// Get the tooltip for the suggestion.
@@ -303,7 +303,7 @@ namespace PSFavorite
 
         #endregion
 
-        #region "interface methods for processing feedback"
+        #region Interface Methods for Processing Feedback
 
         /// <summary>
         /// Gets a value indicating whether the predictor accepts a specific kind of feedback.
@@ -352,7 +352,7 @@ namespace PSFavorite
 
         #endregion
 
-        #region "Unregister"
+        #region Unregister
 
         /// <summary>
         /// Explicitly unregister the predictor from the PSReadLine subsystem.
@@ -373,7 +373,7 @@ namespace PSFavorite
         #endregion
     }
 
-    #region "Init"
+    #region Init
 
     /// <summary>
     /// Register the predictor on module loading and unregister it on module un-loading.

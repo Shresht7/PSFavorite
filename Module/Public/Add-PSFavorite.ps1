@@ -17,7 +17,7 @@
 #>
 function Add-PSFavorite {
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         # The command to add to the favorites list.
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
@@ -46,16 +46,26 @@ function Add-PSFavorite {
         }
 
         if ($Description -eq "") {
+            Write-Verbose "Adding command '$Command' to the favorites list without a description."
             $ToWrite += $Command
         }
         else {
+            Write-Verbose "Adding command '$Command' with description '$Description' to the favorites list."
             $ToWrite += "$Command # $Description"
         }
     }
 
     end {
-        $ToWrite | Out-File -FilePath $FavoritesPath -Append
+        $count = $ToWrite.Count
+        if ($count -gt 0 && $PSCmdlet.ShouldProcess("Add $count command(s) to the favorites list?")) {
+            $ToWrite | Out-File -FilePath $FavoritesPath -Append
+            Write-Verbose "$count command(s) added to the favorites list."
+        }
+
+        
         [PSFavorite.PSFavoritePredictor]::Reload()
+        Write-Verbose "Favorites list reloaded."
+
         $ToWrite
     }
 }

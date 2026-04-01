@@ -27,6 +27,37 @@ PS C:\> "Get-Command | Get-Random | Get-Help    # Get help about a random comman
 
 Your _favorite commands_ will start appearing as suggestions in the **PSReadLine Predictor View**.
 
+### 🌟 Favorites File
+
+The favorites file is where your favorite commands are stored. By default, it is located at:
+
+- Windows: `$Env:LOCALAPPDATA\PSFavorite\Favorites.txt`
+- Linux/macOS: `$HOME/.local/share/PSFavorite/Favorites.txt`
+
+You can get the current path to the favorites file using the `Get-PSFavoritePath` cmdlet:
+
+```powershell
+Get-PSFavoritePath
+```
+
+Favorites are stored in a simple text format, one command per line along with an optional comment description.
+
+```pwsh
+# Favorites.txt file example:
+Get-ChildItem -Path C:\ -Recurse    # List all files in C:\ and subdirectories
+Get-Process | Where-Object CPU -gt 100 # Get processes consuming more than 100 CPU units
+git reset --hard HEAD~1    # Reset the current Git branch to the previous commit, discarding changes
+```
+
+### 📜 Cmdlets
+
+- [`Add-PSFavorite`](./Module/Public/Add-PSFavorite.ps1) - Add a command to your favorites list.
+- [`Get-PSFavorite`](./Module/Public/Get-PSFavorite.ps1) - Get the list of your favorite commands.
+- [`Remove-PSFavorite`](./Module/Public/Remove-PSFavorite.ps1) - Remove a command from your favorites list.
+- [`Get-PSFavoritePath`](./Module/Public/Get-PSFavoritePath.ps1) - Get the path to the favorites file.
+- [`Optimize-PSFavorite`](./Module/Public/Optimize-PSFavorite.ps1) - Optimize the favorites file by removing duplicates and sorting entries.
+- [`Initialize-PSFavorite`](./Module/Public/Initialize-PSFavorite.ps1) - Initialize the favorites file and directory.
+
 ---
 
 ## 📄 Requirements
@@ -58,6 +89,18 @@ Install-Module -Name PSFavorite
 
 ```powershell
 Import-Module -Name PSFavorite
+```
+
+### 3. Initialize the Favorites File
+
+```powershell
+Initialize-PSFavorite # Initialize PSFavorite with the default configuration
+```
+
+or alternatively, to configure the path and keybind:
+
+```powershell
+Initialize-PSFavorite -Path "C:\MyFavorites.txt" -KeyBind "Ctrl+Shift+F"
 ```
 
 > Add this to your `$PROFILE` if you wish to enable this for every session.

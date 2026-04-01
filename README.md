@@ -91,6 +91,18 @@ Install-Module -Name PSFavorite
 Import-Module -Name PSFavorite
 ```
 
+### 3. Initialize the Favorites File
+
+```powershell
+Initialize-PSFavorite # Initialize PSFavorite with the default configuration
+```
+
+or alternatively, to configure the path and keybind:
+
+```powershell
+Initialize-PSFavorite -Path "C:\MyFavorites.txt" -KeyBind "Ctrl+Shift+F"
+```
+
 > Add this to your `$PROFILE` if you wish to enable this for every session.
 
 ## 🪓 Uninstallation

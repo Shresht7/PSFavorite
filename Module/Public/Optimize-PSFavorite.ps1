@@ -9,21 +9,20 @@
     Optimize-PSFavorite
     Sorts and removes duplicates from the favorites list.
 #>
-function Optimize-PSFavorite(
-    # The path to the favorites list file.
-    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-    [string] $FavoritesPath = $Script:FavoritesPath
-) {
-    begin {
-        $Favorites = Get-Content -Path $FavoritesPath
+function Optimize-PSFavorite {
+    [CmdletBinding(SupportsShouldProcess)]
+    param (
+        # The path to the favorites list file.
+        [Alias("Path", "Name", "FullName", "FullPath", "Config", "ConfigPath", "ConfigFile", "FavoritesFile")]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [string] $FavoritesPath = $Script:FavoritesPath
+    )
+    
+    $Favorites = Get-Content -Path $FavoritesPath | Sort-Object -Unique
+
+    if ($PSCmdlet.ShouldProcess("Optimizing favorites list at path '$FavoritesPath' by sorting and removing duplicates")) {
+        $Favorites | Out-File -FilePath $FavoritesPath -Encoding UTF8 -Force
     }
 
-    process {
-        $Favorites = $Favorites | Sort-Object -Unique
-    }
-
-    end {
-        $Favorites | Out-File -FilePath $FavoritesPath
-        [PSFavorite.PSFavoritePredictor]::Reload()
-    }
+    [PSFavorite.PSFavoritePredictor]::Reload()
 }

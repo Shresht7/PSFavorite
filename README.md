@@ -109,8 +109,6 @@ dotnet test Predictor.Tests/PSFavoritePredictor.Tests.csproj -c Debug
 
 ### 🚢 Publishing
 
-The module is automatically published to the PowerShell Gallery when a new **Release** is created on GitHub. 
-
 Ensure the `ModuleVersion` in `Module/PSFavorite.psd1` is updated before creating a release.
 
 ## 📕 Reference

@@ -65,6 +65,12 @@ git reset --hard HEAD~1    # Reset the current Git branch to the previous commit
 - PowerShell v7.2.0 or higher
 - PSReadLine v2.2.2 or higher
 
+`PSReadLine` should be installed by default in PowerShell 7+, but if not, you can install it using:
+
+```powershell
+Install-Module -Name PSReadLine
+```
+
 PSReadLine must allow plugins as a `-PredictionSource`. (i.e. `Plugin` or `HistoryAndPlugin`)
 
 ```powershell
@@ -124,36 +130,46 @@ Initialize-PSFavorite -Path "C:\MyFavorites.txt" -KeyBind "Ctrl+Shift+F"
 ```pwsh
 ./Build.ps1 -Configuration Release
 ```
+> [!WARNING]
+> If the dll is locked by PowerShell, you may need to kill all PowerShell processes that have it loaded and run the build script again.
+> This is always a pain during development, but I haven't found a good workaround for it yet.
 
 ### 🧪 Testing
 
-This module uses [Pester](https://pester.dev/) for testing. To test the module, first build it and then run the following command.
+This module uses [Pester](https://pester.dev/) for testing the [PowerShell Module](./Module/Tests/). To test the module, first build it and then run the following command.
 
 ```pwsh
-./Build.ps1
-Import-Module ./Module/PSFavorite.psd1 -Force
-Invoke-Pester -Path ./Module/Tests
+./Build.ps1 # To build the module and predictor DLL
+Invoke-Pester -Path ./Module/Tests -Verbose # Run all Pester tests in the Module/Tests directory
 ```
 
-The C# predictor includes a small xUnit test project. To run the .NET tests (after restore) run:
+The C# predictor includes a small `xUnit` test project. To run the .NET tests (after restore) run:
 
 ```pwsh
-# Build the predictor and copy the DLL
-./Build.ps1
-
-# Run all .NET tests in the solution
-dotnet test PSFavorite.sln -c Debug
-
-# or simply
-dotnet test
-
-# Or run only the predictor test project
-dotnet test Predictor.Tests/PSFavoritePredictor.Tests.csproj -c Debug
+dotnet test # Run all .NET tests in the solution
 ```
 
 ### 🚢 Publishing
 
-Ensure the `ModuleVersion` in `Module/PSFavorite.psd1` is updated before creating a release.
+#### Version
+
+Ensure the `ModuleVersion` in [`Module/PSFavorite.psd1`](./Module/PSFavorite.psd1) and `<Version>` in [`Predictor/PSFavoritePredictor.csproj`](./Predictor/PSFavoritePredictor.csproj) is updated before creating a release.
+
+Create a git tag for the release and push it to GitHub.
+
+```pwsh
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push --tags
+```
+
+#### Publish to PowerShell Gallery
+
+To publish the module to the PowerShell Gallery, you can use the `Publish-Module` cmdlet using an API key from your PowerShell Gallery account.
+
+```pwsh
+Publish-Module -Path ./Module -NuGetApiKey YOUR_API_KEY
+```
+> I did consider GitHub Actions for CI/CD, but since this is a personal project and I don't plan on frequent releases, ~~not to mention all the horror-stories~~, I decided to keep it simple with manual publishing for now.
 
 ## 📕 Reference
 

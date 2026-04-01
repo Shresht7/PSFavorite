@@ -4,7 +4,6 @@
 .DESCRIPTION
     Remove the given command(s) from the favorites list. This will remove all instances of the command(s).
     The favorites list is stored in the `AppData\Local\PSFavorite\Favorites.txt` file.
-    The changes will be reflected the next time the module is imported.
 .EXAMPLE
     Remove-PSFavorite -Command "Get-Date"
     Remove the "Get-Date" command from the favorites list.
@@ -12,7 +11,7 @@
     "Get-Date" | Remove-PSFavorite
     Remove the "Get-Date" command from the favorites list.
 .EXAMPLE
-    Get-PSFavorite | fzf | Remove-PSFavorite
+    Get-PSFavorite | Invoke-Fzf | Remove-PSFavorite
     Use fuzzy-finder to interactively select a favorite to remove
 #>
 function Remove-PSFavorite {

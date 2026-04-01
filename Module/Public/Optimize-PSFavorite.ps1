@@ -4,7 +4,6 @@
 .DESCRIPTION
     Optimize the favorites list. This will sort the list and remove duplicates.
     The favorites list is stored in the `AppData\Local\PSFavorite\Favorites.txt` file in the PSFavorite module directory.
-    The changes will be loaded in the next time the module is imported.
 .EXAMPLE
     Optimize-PSFavorite
     Sorts and removes duplicates from the favorites list.

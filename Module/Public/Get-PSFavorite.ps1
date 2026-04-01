@@ -17,14 +17,17 @@ function Get-PSFavorite {
     param(
         # The property to select from the favorites list. This can be either "Command" or "Description".
         [ValidateSet("Command", "Description", "All")]
+        [Alias("Select")]
         [string] $Property = "All",
 
         # Filter the favorites list by a string.
         # This will return only the favorites that contain the given string in either the command or the description.
+        [Alias("Like", "Match", "Where")]
         [string] $Filter,
 
         # The path to the favorites list file.
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [Alias("Path", "Name", "FullName", "FullPath")]
         [string] $FavoritesPath = $Script:FavoritesPath
     )
 

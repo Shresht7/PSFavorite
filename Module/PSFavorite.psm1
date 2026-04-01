@@ -18,8 +18,3 @@ Get-ChildItem -Path "$PSScriptRoot\Public" -Filter "*.ps1" | ForEach-Object {
 
 # Initialize the PSFavorite module with the default configuration
 Initialize-PSFavorite
-
-# Load the favorites from the configuration file if it exists
-if ($Script:FavoritesPath) {
-    [PSFavorite.PSFavoritePredictor]::Initialize($Script:FavoritesPath)
-}

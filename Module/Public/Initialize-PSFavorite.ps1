@@ -40,6 +40,11 @@ function Initialize-PSFavorite(
     # Initialize the configuration file
     Initialize-Configuration @Params
 
+    # Load the favorites from the configuration file if it exists
+    if ($Script:FavoritesPath) {
+        [PSFavorite.PSFavoritePredictor]::Initialize($Script:FavoritesPath)
+    }
+
     # Register the Add-PSFavorite KeyHandler
     Register-KeyHandler -Key $Key
 }

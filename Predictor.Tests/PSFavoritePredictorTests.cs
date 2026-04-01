@@ -31,6 +31,64 @@ public class PSFavoritePredictorTests
 
     #endregion
 
+    #region Initialize and Reload
+
+    [Fact]
+    public void Initialize_LoadsFavoritesFromFile()
+    {
+        string temp = Path.GetTempFileName();
+
+        try
+        {
+            string[] lines = ["Get-ChildItem # List files", "Get-Date # Show date"];
+            File.WriteAllLines(temp, lines);
+
+            Predictor.Initialize(temp);
+
+            var field = typeof(Predictor).GetField("_favorites", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.NotNull(field);
+            var favorites = (string[]?)field!.GetValue(null);
+
+            Assert.NotNull(favorites);
+            Assert.Equal(lines, favorites!);
+        }
+        finally
+        {
+            if (File.Exists(temp)) File.Delete(temp);
+        }
+    }
+
+    [Fact]
+    public void Reload_UpdatesFavoritesAfterFileChange()
+    {
+        string temp = Path.GetTempFileName();
+        try
+        {
+            string[] initial = ["CmdA # a"];
+            File.WriteAllLines(temp, initial);
+            Predictor.Initialize(temp);
+
+            // overwrite with new content
+            string[] updated = ["CmdB # b", "CmdC # c"];
+            File.WriteAllLines(temp, updated);
+
+            Predictor.Reload();
+
+            var field = typeof(Predictor).GetField("_favorites", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.NotNull(field);
+            var favorites = (string[]?)field!.GetValue(null);
+
+            Assert.NotNull(favorites);
+            Assert.Equal(updated, favorites!);
+        }
+        finally
+        {
+            if (File.Exists(temp)) File.Delete(temp);
+        }
+    }
+
+    #endregion
+
     #region ParseFavoriteLine
 
     [Fact]

@@ -74,6 +74,7 @@
     FunctionsToExport = @(
         "Add-PSFavorite",
         "Get-PSFavorite",
+        "Get-PSFavoritePath",
         "Initialize-PSFavorite",
         "Optimize-PSFavorite",
         "Remove-PSFavorite",

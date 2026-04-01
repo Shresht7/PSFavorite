@@ -25,6 +25,10 @@ function Add-PSFavorite {
         [Alias("Cmd", "Name", "FullName", "InputObject", "Input")]
         [string[]] $Command,
 
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [Alias("Desc", "Info", "Comment")]
+        [string[]] $Description,
+
         # The path to the favorites list file.
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [string] $FavoritesPath = $Script:FavoritesPath
@@ -35,7 +39,18 @@ function Add-PSFavorite {
     }
 
     process {
-        $ToWrite += $Command
+        if ($Description -eq "" && $Command -contains "#") {
+            $tuple = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($Command)
+            $Command = $tuple.Item1
+            $Description = $tuple.Item2
+        }
+
+        if ($Description -eq "") {
+            $ToWrite += $Command
+        }
+        else {
+            $ToWrite += "$Command # $Description"
+        }
     }
 
     end {

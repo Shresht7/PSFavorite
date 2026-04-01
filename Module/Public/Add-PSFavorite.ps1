@@ -39,13 +39,14 @@ function Add-PSFavorite {
     }
 
     process {
-        if ($Description -eq "" && $Command -contains "#") {
+        Write-Verbose "Processing command '$Command' with description '$Description' to add to favorites list at path '$FavoritesPath'."
+        if ($Description -eq "" -and $Command -contains "#") {
             $tuple = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($Command)
             $Command = $tuple.Item1
             $Description = $tuple.Item2
         }
 
-        if ($Description -eq "") {
+        if ([string]::IsNullOrWhiteSpace($Description)) {
             Write-Verbose "Adding command '$Command' to the favorites list without a description."
             $ToWrite += $Command
         }

@@ -19,6 +19,10 @@ function Get-PSFavorite {
         [ValidateSet("Command", "Description")]
         [string] $Property = "Command",
 
+        # Filter the favorites list by a string.
+        # This will return only the favorites that contain the given string in either the command or the description.
+        [string] $Filter,
+
         # The path to the favorites list file.
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [string] $FavoritesPath = $Script:FavoritesPath
@@ -48,6 +52,10 @@ function Get-PSFavorite {
             Command     = $Command
             Description = $Description
         }
+    }
+    
+    if ($Filter) {
+        $Results = $Results | Where-Object { $_.Command -like "*$Filter*" -or $_.Description -like "*$Filter*" }
     }
 
     if ($Property) {

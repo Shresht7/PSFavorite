@@ -53,6 +53,11 @@ function Add-PSFavorite {
             Write-Verbose "Adding command '$Command' with description '$Description' to the favorites list."
             $ToWrite += "$Command # $Description"
         }
+
+        return [PSCustomObject]@{
+            Command     = $Command
+            Description = $Description
+        }
     }
 
     end {
@@ -65,7 +70,5 @@ function Add-PSFavorite {
         
         [PSFavorite.PSFavoritePredictor]::Reload()
         Write-Verbose "Favorites list reloaded."
-
-        $ToWrite
     }
 }

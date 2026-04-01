@@ -7,7 +7,7 @@ Describe "Remove-PSFavorite" {
         Import-Module (Join-Path $PSScriptRoot ".." ".." "PSFavorite.psm1")
         Initialize-PSFavorite -FavoritesPath $FavoritesPath
         $Contents = @(
-            "Get-Date",
+            "Get-Date # Current Date",
             "Get-Process",
             "Get-Process"
         )

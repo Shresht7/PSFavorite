@@ -37,10 +37,19 @@ function Remove-PSFavorite {
         if ($Cmd -is [PSObject] -and $Cmd.PSObject.Properties.Name -contains 'Command') {
             $CmdName = $Cmd.Command
         }
-        
+
+        # Normalize the requested command string
+        if ($CmdName -ne $null) { $CmdName = [string]$CmdName; $CmdName = $CmdName.Trim() }
+
         # Check if the user wants to remove the command
         if ($PSCmdlet.ShouldProcess("Remove command '$CmdName' from the favorites list?")) {
-            $Favorites = $Favorites | Where-Object { $_ -ne $CmdName }
+            # Compare against the parsed command portion (text before '#') so entries with comments are matched.
+            $Favorites = $Favorites | Where-Object {
+                $tuple = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($_)
+                $favCmd = $tuple.Item1
+                -not ($favCmd -ieq $CmdName)
+            }
+
             Write-Verbose "Command '$CmdName' removed from the favorites list."
         }
     }

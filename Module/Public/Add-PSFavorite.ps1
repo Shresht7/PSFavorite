@@ -9,8 +9,8 @@
     Add-PSFavorite -Command "Get-Date"
     Add the "Get-Date" command to the favorites list.
 .EXAMPLE
-    "Get-Date" | Add-PSFavorite    
-    Add the "Get-Date" command to the favorites list.
+    "Get-Date # Current Date and Time" | Add-PSFavorite    
+    Add the "Get-Date" command to the favorites list with the given comment description.
 .NOTES
     The PSFavorites module ships with a keybinding (`ctrl+shift+*`) to mark
     the current command to the favorites list. So you don't have to use this cmdlet.

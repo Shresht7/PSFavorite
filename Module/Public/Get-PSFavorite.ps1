@@ -15,6 +15,10 @@ function Get-PSFavorite {
 
     [CmdletBinding()]
     param(
+        # The property to select from the favorites list. This can be either "Command" or "Description".
+        [ValidateSet("Command", "Description")]
+        [string] $Property = "Command",
+
         # The path to the favorites list file.
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [string] $FavoritesPath = $Script:FavoritesPath
@@ -44,6 +48,10 @@ function Get-PSFavorite {
             Command     = $Command
             Description = $Description
         }
+    }
+
+    if ($Property) {
+        return $Results | Select-Object -Property $Property
     }
 
     return $Results

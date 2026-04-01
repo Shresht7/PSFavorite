@@ -11,6 +11,7 @@
 #>
 function Optimize-PSFavorite(
     # The path to the favorites list file.
+    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
     [string] $FavoritesPath = $Script:FavoritesPath
 ) {
     begin {

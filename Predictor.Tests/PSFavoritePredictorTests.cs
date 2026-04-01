@@ -159,5 +159,45 @@ public class PSFavoritePredictorTests
         Assert.Equal("Display tag", tooltip);
     }
 
+    [Fact]
+    public void GetTooltip_ReturnsEmpty_WhenNoCommentExists()
+    {
+        string line = "Get-Date";
+
+        string tooltip = Predictor.GetTooltip(line);
+
+        Assert.Equal(string.Empty, tooltip);
+    }
+
+    [Fact]
+    public void GetTooltip_TrimsMultipleHashes()
+    {
+        string line = "Cmd ## multiple hashes";
+
+        string tooltip = Predictor.GetTooltip(line);
+
+        Assert.Equal("multiple hashes", tooltip);
+    }
+
+    [Fact]
+    public void GetTooltip_HandlesCommentOnlyLine()
+    {
+        string line = "# only comment";
+
+        string tooltip = Predictor.GetTooltip(line);
+
+        Assert.Equal("only comment", tooltip);
+    }
+
+    [Fact]
+    public void GetTooltip_TrimsWhitespaceAroundComment()
+    {
+        string line = "Cmd    #   spaced   ";
+
+        string tooltip = Predictor.GetTooltip(line);
+
+        Assert.Equal("spaced", tooltip);
+    }
+
     #endregion
 }

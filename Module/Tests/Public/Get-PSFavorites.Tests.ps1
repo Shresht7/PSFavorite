@@ -3,8 +3,8 @@ Describe "Get-PSFavorite" {
     # Before all, import the module and initialize the favorites list
     BeforeAll {
         # Path to the favorites file
-        $FavoritesPath = "$PSScriptRoot\..\Favorites.txt"
-        Import-Module "$PSScriptRoot\..\..\PSFavorite.psm1"
+        $FavoritesPath = Join-Path $PSScriptRoot ".." "Favorites.txt"
+        Import-Module (Join-Path $PSScriptRoot ".." ".." "PSFavorite.psm1")
         Initialize-PSFavorite -FavoritesPath $FavoritesPath
         $Contents = @(
             "Get-Date",

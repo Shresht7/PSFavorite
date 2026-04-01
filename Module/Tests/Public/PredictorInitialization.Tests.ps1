@@ -1,7 +1,7 @@
 Describe "Predictor initialization on first import" {
     Context "When initializing module with a custom favorites path" {
         It "Creates the favorites file when given a temp path" {
-            $testRoot = Join-Path $PSScriptRoot '..\temp-' + ([guid]::NewGuid().ToString())
+            $testRoot = Join-Path $PSScriptRoot '..\Temp' + ([guid]::NewGuid().ToString())
             New-Item -Path $testRoot -ItemType Directory -Force | Out-Null
 
             $favoritesFile = Join-Path $testRoot 'PSFavorite\Favorites.txt'

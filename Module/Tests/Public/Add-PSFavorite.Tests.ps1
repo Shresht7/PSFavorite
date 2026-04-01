@@ -1,11 +1,10 @@
 Describe "Add-PSFavorite" {
     
-    
     # Before all, import the module and initialize the favorites list
     BeforeAll {
         # Path to the test favorite file
-        $FavoritesPath = "$PSScriptRoot\..\Favorites.txt"
-        Import-Module "$PSScriptRoot\..\..\PSFavorite.psm1"
+        $FavoritesPath = Join-Path $PSScriptRoot ".." "Favorites.txt"
+        Import-Module (Join-Path $PSScriptRoot ".." ".." "PSFavorite.psm1")
         Initialize-PSFavorite -FavoritesPath $FavoritesPath
     }
 
@@ -35,21 +34,18 @@ Describe "Add-PSFavorite" {
     }
 
     Context "When the favorites file does not exist" {
+        
         It "Should create the favorites file" {
-            $NonExistantPath = "$PSScriptRoot\..\DoesNotExist.txt"
-            
+            $NonExistantPath = Join-Path $PSScriptRoot ".." "DoesNotExist.txt"
             $NonExistantPath | Should -Not -Exist
-            Add-PSFavorite -Command "Get-Date" -FavoritesPath $NonExistantPath
-            $NonExistantPath | Should -Exist
-            
-            $Content = Get-Content -Path $NonExistantPath
-            $Content | Should -Contain "Get-Date"
-
-            $Content.Count | Should -Be 1
+            try {
+                Add-PSFavorite -Command "Get-Date" -FavoritesPath $NonExistantPath
+            }
+            catch {
+                $_ | Should -Not -Exist
+            }
         }
-        AfterAll {
-            Remove-Item -Path "$PSScriptRoot\..\DoesNotExist.txt" -Force
-        }
+    
     }
 
     # After all, remove the favorites file

@@ -103,6 +103,7 @@ or alternatively, to configure the path and keybind:
 Initialize-PSFavorite -Path "C:\MyFavorites.txt" -KeyBind "Ctrl+Shift+F"
 ```
 
+> [!NOTE]
 > Add this to your `$PROFILE` if you wish to enable this for every session.
 
 ## 🪓 Uninstallation

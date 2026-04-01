@@ -16,8 +16,8 @@ function Get-PSFavorite {
     [CmdletBinding()]
     param(
         # The property to select from the favorites list. This can be either "Command" or "Description".
-        [ValidateSet("Command", "Description")]
-        [string] $Property = "Command",
+        [ValidateSet("Command", "Description", "All")]
+        [string] $Property = "All",
 
         # Filter the favorites list by a string.
         # This will return only the favorites that contain the given string in either the command or the description.
@@ -58,7 +58,7 @@ function Get-PSFavorite {
         $Results = $Results | Where-Object { $_.Command -like "*$Filter*" -or $_.Description -like "*$Filter*" }
     }
 
-    if ($Property) {
+    if ($Property -and $Property -ne "All") {
         return $Results | Select-Object -Property $Property
     }
 

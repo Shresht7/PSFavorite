@@ -44,7 +44,7 @@ function Get-PSFavorite {
     )
 
     # Get the favorites from the file
-    $Favorites = Get-Content -Path $FavoritesPath
+    $Favorites = Get-Content -Path $FavoritesPath -Encoding UTF8
 
     $Results = @()
 

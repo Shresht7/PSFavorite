@@ -18,21 +18,26 @@
 function Initialize-Configuration {
     [CmdletBinding()]
     param (
-        # Path to the configuration file. If not specified, the default value is used.
+        # Path to the configuration file.
         [string] $FavoritesPath
     )
 
-    # Use specified path or fall back to default
+    # Determine the path (Priority: Parameter > Environment Var > Default)
     if ($FavoritesPath) {
         $Script:FavoritesPath = $FavoritesPath
-        Write-Verbose "Using custom FavoritesPath: $Script:FavoritesPath"
+    }
+    elseif ($Env:PSFAVORITE_PATH) {
+        $Script:FavoritesPath = $Env:PSFAVORITE_PATH
     }
     else {
         $Script:FavoritesPath = Get-PSFavoritePath -Default
-        Write-Verbose "Using default FavoritesPath: $Script:FavoritesPath"
     }
 
-    # Ensure parent directory exists
+    # Sync with Environment Variable for session persistence
+    $Env:PSFAVORITE_PATH = $Script:FavoritesPath
+    Write-Verbose "PSFavorite Path: $Script:FavoritesPath"
+
+    # Ensure parent directory and file exist
     $folder = Split-Path $Script:FavoritesPath
     if (-not (Test-Path -Path $folder)) {
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
@@ -44,4 +49,7 @@ function Initialize-Configuration {
         New-Item -ItemType File -Path $Script:FavoritesPath -Force | Out-Null
         Write-Verbose "Created file: $Script:FavoritesPath"
     }
+
+    # Initialize the C# Predictor
+    [PSFavorite.PSFavoritePredictor]::Initialize($Script:FavoritesPath)
 }

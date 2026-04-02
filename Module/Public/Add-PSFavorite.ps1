@@ -35,7 +35,7 @@ function Add-PSFavorite {
     )
 
     begin {
-        $ToWrite = @()
+        $ToWrite = [System.Collections.Generic.List[string]]::new()
     }
 
     process {
@@ -48,11 +48,11 @@ function Add-PSFavorite {
 
         if ([string]::IsNullOrWhiteSpace($Description)) {
             Write-Verbose "Adding command '$Command' to the favorites list without a description."
-            $ToWrite += $Command
+            $ToWrite.Add($Command)
         }
         else {
             Write-Verbose "Adding command '$Command' with description '$Description' to the favorites list."
-            $ToWrite += "$Command # $Description"
+            $ToWrite.Add("$Command # $Description")
         }
 
         return [PSCustomObject]@{

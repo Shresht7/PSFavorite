@@ -46,10 +46,8 @@ function Get-PSFavorite {
     # Get the favorites from the file
     $Favorites = Get-Content -Path $FavoritesPath -Encoding UTF8
 
-    $Results = @()
-
     # Convert the favorites to a PSCustomObject
-    foreach ($Favorite in $Favorites) {
+    $Results = foreach ($Favorite in $Favorites) {
         # C# `PSFavoritePredictor::ParseFavoriteLine` returns a `System.ValueTuple<string,string>`.
         # PowerShell does not automatically deconstruct a `ValueTuple` into two variables,
         # so we have to access Item1/Item2 explicitly.
@@ -63,7 +61,7 @@ function Get-PSFavorite {
         }
 
         # Output the favorite as a PSCustomObject
-        $Results += [PSCustomObject]@{
+        [PSCustomObject]@{
             Command     = $Command
             Description = $Description
         }

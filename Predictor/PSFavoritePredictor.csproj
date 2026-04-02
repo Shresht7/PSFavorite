@@ -10,7 +10,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>PSFavorite</RootNamespace>
     <AssemblyName>PSFavoritePredictor</AssemblyName>
-    <Version>0.4.0</Version>
+    <Version>0.5.0</Version>
     <Description>Predictor for the PSFavorite module</Description>
   </PropertyGroup>
 

@@ -12,7 +12,7 @@
     RootModule        = 'PSFavorite.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.4.0'
+    ModuleVersion     = '0.5.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -33,7 +33,7 @@
     Description       = 'This module allows you to mark commands as favorites that later show up as PSReadline predictions'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '7.5.0'
+    PowerShellVersion = '7.2.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''

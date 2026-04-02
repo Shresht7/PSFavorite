@@ -22,6 +22,14 @@ Describe "Get-PSFavorite" {
             $Favorites[1].Command | Should -Be "Get-Process"
             $Favorites[1].Description | Should -Be "Get-Process"
         }
+
+        It "Should handle UTF-8 characters" {
+            $command = "Write-Host 'Hello 🌎'"
+            $command | Out-File -FilePath $FavoritesPath -Append -Encoding UTF8
+            $Favorites = Get-PSFavorite -FavoritesPath $FavoritesPath
+            $match = $Favorites | Where-Object { $_.Command -eq $command }
+            $match | Should -Not -BeNull
+        }
     }
 
     # After all, remove the favorites file

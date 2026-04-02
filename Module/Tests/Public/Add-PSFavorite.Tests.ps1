@@ -29,7 +29,22 @@ Describe "Add-PSFavorite" {
             Add-PSFavorite -Command $command
             $Favorites = Get-Content -Path $FavoritesPath
             $Favorites.Count | Should -Be ($count + 1)
-        
+        }
+
+        It "Should handle UTF-8 characters" {
+            $command = "Write-Host 'Hello 🌎'"
+            Add-PSFavorite -Command $command
+            $Favorites = Get-Content -Path $FavoritesPath -Encoding UTF8
+            $Favorites | Should -Contain $command
+        }
+
+        It "Should parse comments from the command string if description is empty" {
+            $input = "Get-Date # Get current date"
+            Add-PSFavorite -Command $input
+            $Favorites = Get-PSFavorite -FavoritesPath $FavoritesPath
+            $match = $Favorites | Where-Object { $_.Command -eq "Get-Date" }
+            $match | Should -Not -BeNull
+            $match.Description | Should -Be "Get current date"
         }
     }
 

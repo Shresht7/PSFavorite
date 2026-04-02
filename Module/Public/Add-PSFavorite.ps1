@@ -64,7 +64,7 @@ function Add-PSFavorite {
     end {
         $count = $ToWrite.Count
         if ($count -gt 0 && $PSCmdlet.ShouldProcess("Add $count command(s) to the favorites list?")) {
-            $ToWrite | Out-File -FilePath $FavoritesPath -Append
+            $ToWrite | Out-File -FilePath $FavoritesPath -Append -Encoding UTF8 -Force
             Write-Verbose "$count command(s) added to the favorites list."
         }
 

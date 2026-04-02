@@ -39,7 +39,7 @@ function Remove-PSFavorite {
         }
 
         # Normalize the requested command string
-        if ($CmdName -ne $null) { $CmdName = [string]$CmdName; $CmdName = $CmdName.Trim() }
+        if ($null -ne $CmdName) { $CmdName = [string]$CmdName; $CmdName = $CmdName.Trim() }
 
         # Check if the user wants to remove the command
         if ($PSCmdlet.ShouldProcess("Remove command '$CmdName' from the favorites list?")) {

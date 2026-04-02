@@ -28,22 +28,8 @@ function Initialize-PSFavorite(
     [Alias("Keybind", "Keybinding", "KeyCombo", "KeyCombination")]
     [string] $Key = "Ctrl+Shift+*"
 ) {
-    # Parameters for the Initialize-Configuration function
-    $Params = @{
-        FavoritesPath = $FavoritesPath
-    }
-
-    # We use splatting here because the FavoritesPath parameter is optional
-    # `Initialize-Configuration` will use the default value if it's not specified.
-    # Also the configuration may grow in the future.
-
-    # Initialize the configuration file
-    Initialize-Configuration @Params
-
-    # Load the favorites from the configuration file if it exists
-    if ($Script:FavoritesPath) {
-        [PSFavorite.PSFavoritePredictor]::Initialize($Script:FavoritesPath)
-    }
+    # Initialize the configuration file and predictor
+    Initialize-Configuration -FavoritesPath $FavoritesPath
 
     # Register the Add-PSFavorite KeyHandler
     Register-KeyHandler -Key $Key

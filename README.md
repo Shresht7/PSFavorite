@@ -27,6 +27,8 @@ PS C:\> "Get-Command | Get-Random | Get-Help    # Get help about a random comman
 
 Your _favorite commands_ will start appearing as suggestions in the **PSReadLine Predictor View**.
 
+See the [Cmdlets](#-cmdlets) section below for more details on how to manage your favorites list.
+
 ### 🌟 Favorites File
 
 The favorites file is where your favorite commands are stored. By default, it is located at:
@@ -56,6 +58,9 @@ git reset --hard HEAD~1    # Undo the last Git commit, discarding changes
 - [`Get-PSFavoritePath`](./Module/Public/Get-PSFavoritePath.ps1) - Get the path to the favorites file.
 - [`Optimize-PSFavorite`](./Module/Public/Optimize-PSFavorite.ps1) - Optimize the favorites file by removing duplicates and sorting entries.
 - [`Initialize-PSFavorite`](./Module/Public/Initialize-PSFavorite.ps1) - Initialize the favorites file and directory.
+
+> [!TIP]
+> Remember, `Get-Help` is your friend! Use it to learn more about each cmdlet and its parameters.
 
 ---
 

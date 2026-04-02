@@ -5,6 +5,13 @@ function Register-KeyHandler(
     # The keybinding to register the Add-PSFavorite KeyHandler
     [string] $Key = "Ctrl+Shift+*"
 ) {
+    # Check if the key is already registered to this module to avoid redundant calls
+    $current = Get-PSReadLineKeyHandler -Bound | Where-Object { $_.Key -eq $Key }
+    if ($null -ne $current -and $current.BriefDescription -eq "AddFavorite") {
+        Write-Verbose "Key handler for '$Key' is already registered."
+        return
+    }
+
     Set-PSReadLineKeyHandler -Key $Key `
         -BriefDescription "AddFavorite" `
         -LongDescription "Add the current command to the favorites list" `

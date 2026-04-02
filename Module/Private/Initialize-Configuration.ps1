@@ -15,42 +15,33 @@
     Initialize-Configuration -FavoritesPath "C:\MyFavorites\Favorites.txt" -Verbose
     This example initializes the configuration using a custom FavoritesPath value and shows verbose output.
 #>
-function Initialize-Configuration(
-    # Name of the parent folder
-    [string] $ModuleName = "PSFavorite",
+function Initialize-Configuration {
+    [CmdletBinding()]
+    param (
+        # Path to the configuration file. If not specified, the default value is used.
+        [string] $FavoritesPath
+    )
 
-    # Name of the configuration file
-    [string] $FavoritesFile = "Favorites.txt",
-
-    # Path to the configuration file
-    [string] $FavoritesPath
-) {
-
-    # Determine the local application data directory based on the operating system
-    $Local = if ($IsWindows) { $Env:LOCALAPPDATA } else { "$HOME/.local/share" }
-
-    # If the FavoritesPath parameter is specified, use it ...
+    # Use specified path or fall back to default
     if ($FavoritesPath) {
         $Script:FavoritesPath = $FavoritesPath
         Write-Verbose "Using custom FavoritesPath: $Script:FavoritesPath"
     }
-    # ... otherwise, use the default path
     else {
-        $Script:FavoritesPath = Join-Path $Local $ModuleName $FavoritesFile
+        $Script:FavoritesPath = Get-PSFavoritePath -Default
         Write-Verbose "Using default FavoritesPath: $Script:FavoritesPath"
     }
 
-    # Create the directory if it doesn't exist
+    # Ensure parent directory exists
     $folder = Split-Path $Script:FavoritesPath
     if (-not (Test-Path -Path $folder)) {
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
         Write-Verbose "Created directory: $folder"
     }
 
-    # Create the Favorites file if it doesn't exist
+    # Create empty file if it doesn't exist
     if (-not (Test-Path -Path $Script:FavoritesPath)) {
         New-Item -ItemType File -Path $Script:FavoritesPath -Force | Out-Null
         Write-Verbose "Created file: $Script:FavoritesPath"
     }
-
 }

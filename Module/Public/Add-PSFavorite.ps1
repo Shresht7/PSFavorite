@@ -40,7 +40,7 @@ function Add-PSFavorite {
 
     process {
         Write-Verbose "Processing command '$Command' with description '$Description' to add to favorites list at path '$FavoritesPath'."
-        if ($Description -eq "" -and $Command -contains "#") {
+        if ($Description -eq "" -and $Command -contains "*#*") {
             $tuple = [PSFavorite.PSFavoritePredictor]::ParseFavoriteLine($Command)
             $Command = $tuple.Item1
             $Description = $tuple.Item2

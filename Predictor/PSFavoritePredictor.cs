@@ -61,7 +61,13 @@ namespace PSFavorite
         /// A cached list of favorite commands.
         /// Can be updated by calling `LoadFavoritesIfExists` or `Reload`, which is triggered during initialization.
         /// </summary>
-        private static string[] _favorites = [];
+        private static FavoriteEntry[] _favorites = [];
+
+        /// <summary>
+        /// A record to store a favorite command and its tooltip.
+        /// </summary>
+        internal record FavoriteEntry(string Line, string Command, string Tooltip);
+
 
         /// <summary>
         /// An object used for locking access to the favorites array to ensure thread safety.
@@ -104,9 +110,18 @@ namespace PSFavorite
                 // Check if the favorites file exists. If it does, read all lines and update the _favorites array.
                 if (File.Exists(_FavoritesFilePath))
                 {
+                    string[] lines = File.ReadAllLines(_FavoritesFilePath);
+                    var parsedFavorites = lines
+                        .Select(line =>
+                        {
+                            var (command, tooltip) = ParseFavoriteLine(line);
+                            return new FavoriteEntry(line, command, tooltip);
+                        })
+                        .ToArray();
+
                     lock (_favoritesLock)
                     {
-                        _favorites = File.ReadAllLines(_FavoritesFilePath);
+                        _favorites = parsedFavorites;
                     }
                 }
                 // ...otherwise, if the file does not exist, set _favorites to an empty array.
@@ -150,7 +165,7 @@ namespace PSFavorite
             }
 
             // Take a snapshot of the favorites array to avoid locking it for the entire suggestion generation process.
-            string[] favoritesSnapshot;
+            FavoriteEntry[] favoritesSnapshot;
             lock (_favoritesLock)
             {
                 favoritesSnapshot = _favorites;
@@ -164,12 +179,12 @@ namespace PSFavorite
 
             // Generate suggestions based on the input and the favorites.
             var suggestions = new List<(int Score, PredictiveSuggestion Suggestion)>();
-            foreach (var line in favoritesSnapshot)
+            foreach (var entry in favoritesSnapshot)
             {
-                int score = DetermineScore(input, line);
+                int score = DetermineScore(input, entry.Line);
                 if (score >= ScoreThreshold)
                 {
-                    suggestions.Add((score, new PredictiveSuggestion(line, GetTooltip(line))));
+                    suggestions.Add((score, new PredictiveSuggestion(entry.Line, entry.Tooltip)));
                 }
             }
 

@@ -47,10 +47,10 @@ public class PSFavoritePredictorTests
 
             var field = typeof(Predictor).GetField("_favorites", BindingFlags.Static | BindingFlags.NonPublic);
             Assert.NotNull(field);
-            var favorites = (string[]?)field!.GetValue(null);
+            var favorites = (Predictor.FavoriteEntry[]?)field!.GetValue(null);
 
             Assert.NotNull(favorites);
-            Assert.Equal(lines, favorites!);
+            Assert.Equal(lines, favorites!.Select(f => f.Line));
         }
         finally
         {
@@ -76,10 +76,10 @@ public class PSFavoritePredictorTests
 
             var field = typeof(Predictor).GetField("_favorites", BindingFlags.Static | BindingFlags.NonPublic);
             Assert.NotNull(field);
-            var favorites = (string[]?)field!.GetValue(null);
+            var favorites = (Predictor.FavoriteEntry[]?)field!.GetValue(null);
 
             Assert.NotNull(favorites);
-            Assert.Equal(updated, favorites!);
+            Assert.Equal(updated, favorites!.Select(f => f.Line));
         }
         finally
         {

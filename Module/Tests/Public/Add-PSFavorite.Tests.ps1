@@ -39,12 +39,12 @@ Describe "Add-PSFavorite" {
         }
 
         It "Should parse comments from the command string if description is empty" {
-            $input = "Get-Date # Get current date"
-            Add-PSFavorite -Command $input
+            $testCmd = "Get-Service # Get list of services"
+            Add-PSFavorite -Command $testCmd
             $Favorites = Get-PSFavorite -FavoritesPath $FavoritesPath
-            $match = $Favorites | Where-Object { $_.Command -eq "Get-Date" }
+            $match = $Favorites | Where-Object { $_.Command -eq "Get-Service" }
             $match | Should -Not -BeNull
-            $match.Description | Should -Be "Get current date"
+            $match.Description | Should -Be "Get list of services"
         }
     }
 
